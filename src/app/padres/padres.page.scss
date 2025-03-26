@@ -1,0 +1,15 @@
+ion-fab{
+  margin-bottom: 16px;
+  margin-right: 16px;
+}
+ion-card {
+  max-width: 350px; /* Ajusta el ancho máximo del card */
+  margin: 10px auto; /* Centra el card horizontalmente */
+}
+ion-card img {
+  width: 100%; /* Hace que la imagen ocupe todo el ancho del card */
+  height: auto; /* Mantiene la proporción de la imagen */
+  display: block; /* Elimina cualquier espacio adicional alrededor de la imagen */
+  border-top-left-radius: 12px; /* Ajusta el radio de las esquinas si es necesario */
+  border-top-right-radius: 12px;
+}

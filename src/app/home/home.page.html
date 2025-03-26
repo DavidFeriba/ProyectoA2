@@ -1,0 +1,22 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      Primera pantalla
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-card color="primary" routerLink="/padres">
+    <ion-card-header>
+      <ion-card-title class="centrar">Padres</ion-card-title>    </ion-card-header>
+  </ion-card>
+  <ion-card color="success" routerLink="/alumnos">
+    <ion-card-header>
+      <ion-card-title class="centrar">Alumnos</ion-card-title>    </ion-card-header>
+  </ion-card>
+  <ion-card color="warning" routerLink="/profesorado">
+    <ion-card-header>
+      <ion-card-title class="centrar">Profesorado</ion-card-title>    </ion-card-header>
+  </ion-card>
+</ion-content>

@@ -1,0 +1,250 @@
+
+<ion-content [fullscreen]="true">
+  <ion-toolbar>
+    <ion-title size="large">Profesorado</ion-title>
+    <ion-header [translucent]="true">
+      <ion-toolbar>
+        <ion-datetime  presentation="date" value={{today}} [highlightedDates]="highlightedDates"></ion-datetime>
+      </ion-toolbar>
+    </ion-header>
+  </ion-toolbar>
+  <ion-list>
+    <ion-item id="modal1">
+      <ion-icon class="formato-icon" aria-hidden="true" name="ribbon-outline" slot="start"></ion-icon>
+      <ion-label class="grande">Logros</ion-label>
+    </ion-item>
+    <ion-item id="modal2">
+      <ion-icon class="formato-icon" aria-hidden="true" name="reader-outline" slot="start"></ion-icon>
+      <ion-label class="grande">Tareas</ion-label>
+    </ion-item>
+    <ion-item id="modal3">
+      <ion-icon class="formato-icon" aria-hidden="true" name="school-outline" slot="start"></ion-icon>
+      <ion-label class="grande">Alumnos</ion-label>
+    </ion-item>
+    <ion-item id="modal4">
+      <ion-icon class="formato-icon" aria-hidden="true" name="alert-outline" slot="start"></ion-icon>
+      <ion-label class="grande">Avisos</ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ion-modal #modal1 trigger="modal1">
+    <ng-template>
+      <ion-content>
+        <ion-toolbar>
+          <ion-title>Logros</ion-title>
+          <ion-button slot="end" color="rgb(14 116 144)">
+              <ion-icon size="large" aria-hidden="true" name="add-circle-outline"></ion-icon>
+          </ion-button>
+          <ion-buttons slot="start">
+            <ion-button color="light" (click)="closeModal(modal1)">Close</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+
+        <ion-list>
+          <ion-item *ngFor="let alumno of alumnos">
+            <ion-avatar slot="start">
+              <ion-img src=alumno.imagen></ion-img>
+            </ion-avatar>
+            <ion-label>
+              <h2>Connor Smith</h2>
+              <p>Sales Rep</p>
+            </ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-avatar slot="start">
+              <ion-img src="https://i.pravatar.cc/300?u=a"></ion-img>
+            </ion-avatar>
+            <ion-label>
+              <h2>Daniel Smith</h2>
+              <p>Product Designer</p>
+            </ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-avatar slot="start">
+              <ion-img src="https://i.pravatar.cc/300?u=d"></ion-img>
+            </ion-avatar>
+            <ion-label>
+              <h2>Greg Smith</h2>
+              <p>Director of Operations</p>
+            </ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-avatar slot="start">
+              <ion-img src="https://i.pravatar.cc/300?u=e"></ion-img>
+            </ion-avatar>
+            <ion-label>
+              <h2>Zoey Smith</h2>
+              <p>CEO</p>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+  
+  <ion-modal #modal2 trigger="modal2">
+    <ng-template>
+      <ion-content>
+        <ion-toolbar>
+          <ion-title>Tareas</ion-title>
+          <ion-button slot="end" color="rgb(14 116 144)">
+            <ion-icon size="large" aria-hidden="true" name="add-circle-outline"></ion-icon>
+        </ion-button>
+          <ion-buttons slot="end">
+            <ion-button color="light" (click)="closeModal(modal2)">Close</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+        <ion-list>
+          <ion-item>
+            <ion-avatar slot="start">
+              <ion-img src="https://i.pravatar.cc/300?u=b"></ion-img>
+            </ion-avatar>
+            <ion-label>
+              <h2>Connor Smith</h2>
+              <p>Sales Rep</p>
+            </ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-avatar slot="start">
+              <ion-img src="https://i.pravatar.cc/300?u=a"></ion-img>
+            </ion-avatar>
+            <ion-label>
+              <h2>Daniel Smith</h2>
+              <p>Product Designer</p>
+            </ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-avatar slot="start">
+              <ion-img src="https://i.pravatar.cc/300?u=d"></ion-img>
+            </ion-avatar>
+            <ion-label>
+              <h2>Greg Smith</h2>
+              <p>Director of Operations</p>
+            </ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-avatar slot="start">
+              <ion-img src="https://i.pravatar.cc/300?u=e"></ion-img>
+            </ion-avatar>
+            <ion-label>
+              <h2>Zoey Smith</h2>
+              <p>CEO</p>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+  
+  <ion-modal #modal3 trigger="modal3">
+    <ng-template>
+      <ion-content>
+        <ion-toolbar>
+          <ion-title>Tareas</ion-title>
+          <ion-button id="add-alumno-alert" slot="end" color="rgb(14 116 144)" >
+            <ion-icon size="large" aria-hidden="true" name="add-circle-outline"></ion-icon>
+        </ion-button>
+          <ion-buttons slot="start">
+            <ion-button color="light" (click)="closeModal(modal3)">Close</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+        <ion-list>
+          <ion-item>
+            <ion-avatar slot="start">
+              <ion-img src="https://i.pravatar.cc/300?u=b"></ion-img>
+            </ion-avatar>
+            <ion-label>
+              <h2>Connor Smith</h2>
+              <p>Sales Rep</p>
+            </ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-avatar slot="start">
+              <ion-img src="https://i.pravatar.cc/300?u=a"></ion-img>
+            </ion-avatar>
+            <ion-label>
+              <h2>Daniel Smith</h2>
+              <p>Product Designer</p>
+            </ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-avatar slot="start">
+              <ion-img src="https://i.pravatar.cc/300?u=d"></ion-img>
+            </ion-avatar>
+            <ion-label>
+              <h2>Greg Smith</h2>
+              <p>Director of Operations</p>
+            </ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-avatar slot="start">
+              <ion-img src="https://i.pravatar.cc/300?u=e"></ion-img>
+            </ion-avatar>
+            <ion-label>
+              <h2>Zoey Smith</h2>
+              <p>CEO</p>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+        <ion-alert
+  trigger="add-alumno-alert"
+  header="Please enter your info"
+  [buttons]="alertButtons"
+  [inputs]="alertInputs"
+></ion-alert>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+  
+  <ion-modal #modal4 trigger="modal4">
+    <ng-template>
+      <ion-content>
+        <ion-toolbar>
+          <ion-title>Tareas</ion-title>
+          <ion-buttons slot="end">
+            <ion-button color="light" (click)="closeModal(modal4)">Close</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+        <ion-list>
+          <ion-item>
+            <ion-avatar slot="start">
+              <ion-img src="https://i.pravatar.cc/300?u=b"></ion-img>
+            </ion-avatar>
+            <ion-label>
+              <h2>Connor Smith</h2>
+              <p>Sales Rep</p>
+            </ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-avatar slot="start">
+              <ion-img src="https://i.pravatar.cc/300?u=a"></ion-img>
+            </ion-avatar>
+            <ion-label>
+              <h2>Daniel Smith</h2>
+              <p>Product Designer</p>
+            </ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-avatar slot="start">
+              <ion-img src="https://i.pravatar.cc/300?u=d"></ion-img>
+            </ion-avatar>
+            <ion-label>
+              <h2>Greg Smith</h2>
+              <p>Director of Operations</p>
+            </ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-avatar slot="start">
+              <ion-img src="https://i.pravatar.cc/300?u=e"></ion-img>
+            </ion-avatar>
+            <ion-label>
+              <h2>Zoey Smith</h2>
+              <p>CEO</p>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+  
+</ion-content>
