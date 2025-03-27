@@ -15,12 +15,33 @@ export class SupabaseService {
   }
 
   async obtenerUsuarios() {
-    const { data, error } = await this.supabase.from('usuarios').select('*');
+    const { data, error } = await this.supabase.from('alumnos').select('*');
     if (error) {
       console.error('Error al obtener usuarios:', error);
       return [];  // Si hay error, devolvemos un array vacío
     }
     console.log('Datos obtenidos de Supabase:', data);  // Agrega esto para ver qué datos recibes
     return data;
+  }
+
+
+  async addAlumno(nombre1: string, apellidos1: string, curso1: string, foto1:string) {
+    const { data, error } = await this.supabase
+      .from('alumnos')
+      .insert([
+        {
+          nombre: nombre1,
+          apellidos: apellidos1,
+          foto: foto1,
+          curso: curso1
+        }
+      ]);
+  
+    if (error) {
+      console.error('Error al insertar alumno:', error.message);
+      return { error };
+    }
+  
+    return { data };
   }
 }

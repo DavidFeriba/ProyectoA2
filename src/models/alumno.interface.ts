@@ -1,5 +1,4 @@
 import { Aviso } from "./aviso.interface";
-import { Curso } from "./curso.interface";
 import { Logro } from "./logro.interface";
 import { Nota } from "./nota.interface";
 import { Profesor } from "./profesor.interface";
@@ -10,7 +9,7 @@ export interface Alumno{
     foto:string;
     notas?: Nota[];
     profesor?: Profesor;
-    curso: Curso;
+    curso: string;
     logros?: Logro[];
     avisos?: Aviso[];
 }
