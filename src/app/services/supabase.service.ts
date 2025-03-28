@@ -25,23 +25,17 @@ export class SupabaseService {
   }
 
 
-  async addAlumno(nombre1: string, apellidos1: string, curso1: string, foto1:string) {
-    const { data, error } = await this.supabase
-      .from('alumnos')
-      .insert([
-        {
-          nombre: nombre1,
-          apellidos: apellidos1,
-          foto: foto1,
-          curso: curso1
-        }
-      ]);
-  
+  async addAlumno(nombre: string, apellidos: string, curso: string, foto: string) {
+    return this.supabase.from('alumnos').insert([{ nombre, apellidos, curso, foto }]);
+  }
+  async subirArchivo(bucket: string, filePath: string, file: File) {
+    const { data, error } = await this.supabase.storage.from(bucket).upload(filePath, file, { upsert: true });
+
     if (error) {
-      console.error('Error al insertar alumno:', error.message);
+      console.error('Error al subir archivo:', error.message);
       return { error };
     }
-  
+
     return { data };
   }
 }

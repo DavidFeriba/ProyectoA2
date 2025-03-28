@@ -30,42 +30,46 @@ export class PadresPage implements OnInit {
     console.log('Usuarios:', this.alumnos);
   }
 
+  async subirImagen(base64String: string): Promise<string | null> {
+    const filePath = `assets/imgAlumnos/${Date.now()}.png`; // Nombre único basado en timestamp
+    const file = this.base64StringToFile(base64String, filePath);
 
-    
-    /**if (image.base64String) {
-      const filePath = `imgAlumnos/${Date.now()}.png`; // Nombre único basado en el timestamp
-      const file = this.base64StringToFile(image.base64String, filePath);
-  
-      const { data, error } = await this.supabase.storage
-        .from('imgAlumnos') // Asegúrate de tener un "bucket" llamado 'avatars'
-        .upload(filePath, file, { upsert: true });
-  
-      if (error) {
-        console.error('Error subiendo la imagen:', error);
-      } else {
-        console.log('Imagen subida con éxito:', data);
-        this.selectedPhoto = data.Key; // Guardamos la clave del archivo en el estado
-      }
+    const { data, error } = await this.supabaseService.subirArchivo('fotos', filePath, file);
+
+    if (error) {
+      console.error('Error subiendo la imagen:', error);
+      return null;
     }
+
+    console.log('Imagen subida con éxito:', data);
+    return filePath; // Devuelve la ruta del archivo en el bucket
   }
 
   base64StringToFile(base64: string, filename: string): File {
-    const byteCharacters = atob(base64);
+    // Elimina el prefijo 'data:image/jpeg;base64,' o cualquier otro tipo
+    const base64String = base64.split(',')[1];  // Extrae solo la parte Base64
+  
+    const byteCharacters = atob(base64String);
     const byteArrays = [];
-
+    
     for (let offset = 0; offset < byteCharacters.length; offset += 512) {
       const byteSlice = byteCharacters.slice(offset, offset + 512);
       const byteNumbers = new Array(byteSlice.length);
-
+  
       for (let i = 0; i < byteSlice.length; i++) {
         byteNumbers[i] = byteSlice.charCodeAt(i);
       }
-
+  
       const byteArray = new Uint8Array(byteNumbers);
       byteArrays.push(byteArray);
     }
+  
+    return new File(byteArrays, filename, { type: 'image/png' }); // ✅ Asegurar el return
+  }
+  
 
-    return new File(byteArrays, filename, { type: 'image/png' });*/
+
+
   
 
   async presentAlert(initialData: any={}) {
@@ -111,8 +115,22 @@ export class PadresPage implements OnInit {
         },
         {
           text: 'OK',
-          handler: (data: any) => {
-            this.addAlumno(data);
+          handler: async (data: any) => {
+            // Lógica para subir la imagen cuando se hace clic en "OK"
+          if (this.selectedPhoto) {
+            // Si se ha seleccionado una foto, subimos la imagen
+            const filePath = await this.subirImagen(this.selectedPhoto);
+            if (filePath) {
+              this.selectedPhoto = `https://xihoqjtqwissymcnjrud.supabase.co/storage/v1/object/public/${filePath}`;
+            }
+          }
+
+          // Aquí agregamos el alumno con la foto que se subió (o la predeterminada)
+          await this.addAlumno({
+            ...data,
+            foto: this.selectedPhoto || 'assets/default-avatar.png'
+          });
+        
           }
         },
         {
@@ -134,18 +152,17 @@ export class PadresPage implements OnInit {
             
             // Actualiza la foto
             this.selectedPhoto = `data:image/jpeg;base64,${image.base64String}`;
-            
-            // Actualiza la imagen en el alert directamente
             const alertElement = await this.alertController.getTop();
-            if (alertElement) {
-              const shadowRoot = alertElement.shadowRoot || alertElement;
-              const imgElement = shadowRoot.querySelector('img');
-              
-              if (imgElement instanceof HTMLImageElement) {
-                imgElement.src = this.selectedPhoto;
-              }
+          if (alertElement) {
+            const shadowRoot = alertElement.shadowRoot || alertElement;
+            const imgElement = shadowRoot.querySelector('img');
+            
+            if (imgElement instanceof HTMLImageElement) {
+              imgElement.src = this.selectedPhoto;
             }
-            // Restaura los valores
+          }
+       
+            
             alert.inputs[0].value = currentValues.nombre;
             alert.inputs[1].value = currentValues.apellidos;
             alert.inputs[2].value = currentValues.curso;
