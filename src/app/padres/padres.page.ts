@@ -22,7 +22,7 @@ export class PadresPage implements OnInit {
   public selectedPhoto: string = ''; // Almacena la imagen seleccionada
   supabase: any;
 
-  constructor(private supabaseService: SupabaseService,private alertController: AlertController) {
+  constructor(private supabaseService: SupabaseService,private alertController: AlertController, private router:Router) {
     this.today = new Date().toISOString().split("T")[0];
   }
   async ngOnInit() {
@@ -121,7 +121,7 @@ export class PadresPage implements OnInit {
             // Si se ha seleccionado una foto, subimos la imagen
             const filePath = await this.subirImagen(this.selectedPhoto);
             if (filePath) {
-              this.selectedPhoto = `https://xihoqjtqwissymcnjrud.supabase.co/storage/v1/object/public/${filePath}`;
+              this.selectedPhoto = `https://xihoqjtqwissymcnjrud.supabase.co/storage/v1/object/public/fotos/${filePath}`;
             }
           }
 

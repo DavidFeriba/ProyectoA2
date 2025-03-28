@@ -4,6 +4,7 @@ import { Nota } from "./nota.interface";
 import { Profesor } from "./profesor.interface";
 
 export interface Alumno{
+    id: number;
     nombre:string;
     apellidos:string;
     foto:string;

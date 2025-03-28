@@ -18,7 +18,7 @@
       
       <ion-col size="12" size-md="6" size-lg="4" *ngFor="let alumno of alumnos">
         <ion-card>
-          <img [src]="alumno.foto" alt="Foto de {{ alumno.nombre }}">
+          <img [routerLink]="['/hijo',alumno.id]" [src]="alumno.foto" alt="Foto de {{ alumno.nombre }}">
           <ion-card-header>
             <ion-card-title>{{alumno.nombre}}</ion-card-title>
             <ion-card-subtitle>{{alumno.apellidos}} || {{alumno.curso}}º</ion-card-subtitle>
