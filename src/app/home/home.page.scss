@@ -29,3 +29,7 @@
 .centrar {
   text-align: center;
 }
+
+ion-col:first-child {
+  margin-left: auto; /* Empuja el botón a la derecha */
+}

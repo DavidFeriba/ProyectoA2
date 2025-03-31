@@ -27,6 +27,10 @@ const routes: Routes = [
     path: 'hijo/:id',
     loadChildren: () => import('./hijo/hijo.module').then( m => m.HijoPageModule)
   },
+  {
+    path: 'registrar',
+    loadChildren: () => import('./registrar/registrar.module').then( m => m.RegistrarPageModule)
+  },
 ];
 
 @NgModule({

@@ -1,0 +1,29 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Registro</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-segment>
+    <ion-segment-button value="first" content-id="first">
+      <ion-label>First</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="second" content-id="second">
+      <ion-label>Second</ion-label>
+    </ion-segment-button>
+
+  </ion-segment>
+  <ion-segment-view>
+    <ion-segment-content id="first">
+      <ion-input type="email" fill="solid" label="Email" labelPlacement="floating" helperText="Enter a valid email"
+      errorText="Invalid email" ngModel email></ion-input>
+    <ion-input helperText="Introduce tu nombre" fill="solid" labelPlacement="floating" labelPlacement="floating" label="Nombre" placeholder="Tu nombre"></ion-input>
+    </ion-segment-content>
+    <ion-segment-content id="second">
+      <ion-input type="email" fill="solid" label="Email" labelPlacement="floating" helperText="Enter a valid email"
+        errorText="Invalid email" ngModel email></ion-input>
+      <ion-input helperText="Introduce tu nombre" fill="solid" labelPlacement="floating" labelPlacement="floating" label="Nombre" placeholder="Tu nombre"></ion-input>
+    </ion-segment-content>
+  </ion-segment-view>
+</ion-content>
