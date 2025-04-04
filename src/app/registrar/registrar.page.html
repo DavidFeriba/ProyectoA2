@@ -5,29 +5,51 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-segment>
+  <ion-segment [(ngModel)]="userType">
     <ion-segment-button value="tutor" content-id="tutor">
       <ion-label>Tutor</ion-label>
     </ion-segment-button>
     <ion-segment-button value="profesor" content-id="profesor">
       <ion-label>Profesor</ion-label>
     </ion-segment-button>
-
   </ion-segment>
+
   <ion-segment-view>
     <ion-segment-content id="tutor">
-      <ion-input type="email" fill="solid" label="Email" labelPlacement="floating" helperText="Introduce un email"
-      errorText="Email no permitido" ngModel email></ion-input>
-    <ion-input helperText="Introduce tu nombre" fill="solid" labelPlacement="floating" labelPlacement="floating" label="Nombre" placeholder="Tu nombre"></ion-input>
-    <ion-input helperText="asd" fill="solid" labelPlacement="floating" labelPlacement="floating" label="1ºer apellido" placeholder="1ºer apellido"></ion-input>
-    <ion-input helperText="asdas" fill="solid" labelPlacement="floating" labelPlacement="floating" label="2ºer apelldio" placeholder="2ºer apelldio"></ion-input>
+      <ion-input [(ngModel)]="email" type="email" fill="solid" label="Email" labelPlacement="floating" helperText="Introduce un email" errorText="Email no permitido"></ion-input>
+      <ion-input [(ngModel)]="nombre" helperText="Introduce tu nombre" fill="solid" labelPlacement="floating" label="Nombre" placeholder="Tu nombre"></ion-input>
+      <ion-input [(ngModel)]="apellidos" helperText="asd" fill="solid" labelPlacement="floating" label="Apellidos" placeholder="Apellidos"></ion-input>
+      <ion-input [(ngModel)]="password" type="password" helperText="contraseña" fill="solid" labelPlacement="floating" label="Contraseña" placeholder="contraseña"></ion-input>
+      <ion-radio-group [(ngModel)]="selectedRole">
+        <ion-item>
+          <ion-label>Padre</ion-label>
+          <ion-radio value="padre"></ion-radio>
+        </ion-item>
+        <ion-item>
+          <ion-label>Madre</ion-label>
+          <ion-radio value="madre"></ion-radio>
+        </ion-item>
+        <ion-item>
+          <ion-label>Tutor legal</ion-label>
+          <ion-radio value="tutorLegal"></ion-radio>
+        </ion-item>
+      </ion-radio-group>
+
+      <ion-footer>
+        <ion-button (click)="registerTutor()">Registrarse</ion-button>
+      </ion-footer>
     </ion-segment-content>
+
     <ion-segment-content id="profesor">
-      <ion-input type="email" fill="solid" label="Email" labelPlacement="floating" helperText="Introduce un email"
-      errorText="Email no permitido" ngModel email></ion-input>
-    <ion-input helperText="Introduce tu nombre" fill="solid" labelPlacement="floating" labelPlacement="floating" label="Nombre" placeholder="Tu nombre"></ion-input>
-    <ion-input helperText="asd" fill="solid" labelPlacement="floating" labelPlacement="floating" label="1ºer apellido" placeholder="1ºer apellido"></ion-input>
-    <ion-input helperText="asdas" fill="solid" labelPlacement="floating" labelPlacement="floating" label="2ºer apelldio" placeholder="2ºer apelldio"></ion-input>
+      <ion-input [(ngModel)]="email" type="email" fill="solid" label="Email" labelPlacement="floating" helperText="Introduce un email" errorText="Email no permitido"></ion-input>
+      <ion-input [(ngModel)]="nombre" helperText="Introduce tu nombre" fill="solid" labelPlacement="floating" label="Nombre" placeholder="Tu nombre"></ion-input>
+      <ion-input [(ngModel)]="apellidos" helperText="asd" fill="solid" labelPlacement="floating" label="Apellidos" placeholder="Apellidos"></ion-input>
+      <ion-input [(ngModel)]="password" type="password" helperText="contraseña" fill="solid" labelPlacement="floating" label="Contraseña" placeholder="contraseña"></ion-input>
+
+
+      <ion-footer>
+        <ion-button (click)="registerProfesor()">Registrarse</ion-button>
+      </ion-footer>
     </ion-segment-content>
   </ion-segment-view>
 </ion-content>
