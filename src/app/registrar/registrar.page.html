@@ -16,10 +16,10 @@
 
   <ion-segment-view>
     <ion-segment-content id="tutor">
-      <ion-input [(ngModel)]="email" type="email" fill="solid" label="Email" labelPlacement="floating" helperText="Introduce un email" errorText="Email no permitido"></ion-input>
-      <ion-input [(ngModel)]="nombre" helperText="Introduce tu nombre" fill="solid" labelPlacement="floating" label="Nombre" placeholder="Tu nombre"></ion-input>
-      <ion-input [(ngModel)]="apellidos" helperText="asd" fill="solid" labelPlacement="floating" label="Apellidos" placeholder="Apellidos"></ion-input>
-      <ion-input [(ngModel)]="password" type="password" helperText="contraseña" fill="solid" labelPlacement="floating" label="Contraseña" placeholder="contraseña"></ion-input>
+      <ion-input [(ngModel)]="email" type="email" fill="solid" label="Email" labelPlacement="floating"  errorText="Email no permitido"></ion-input>
+      <ion-input [(ngModel)]="nombre"  fill="solid" labelPlacement="floating" label="Nombre" placeholder="Tu nombre"></ion-input>
+      <ion-input [(ngModel)]="apellidos" fill="solid" labelPlacement="floating" label="Apellidos" placeholder="Apellidos"></ion-input>
+      <ion-input [(ngModel)]="password" type="password"  fill="solid" labelPlacement="floating" label="Contraseña" placeholder="contraseña"></ion-input>
       <ion-radio-group [(ngModel)]="selectedRole">
         <ion-item>
           <ion-label>Padre</ion-label>
@@ -41,10 +41,24 @@
     </ion-segment-content>
 
     <ion-segment-content id="profesor">
-      <ion-input [(ngModel)]="email" type="email" fill="solid" label="Email" labelPlacement="floating" helperText="Introduce un email" errorText="Email no permitido"></ion-input>
-      <ion-input [(ngModel)]="nombre" helperText="Introduce tu nombre" fill="solid" labelPlacement="floating" label="Nombre" placeholder="Tu nombre"></ion-input>
-      <ion-input [(ngModel)]="apellidos" helperText="asd" fill="solid" labelPlacement="floating" label="Apellidos" placeholder="Apellidos"></ion-input>
-      <ion-input [(ngModel)]="password" type="password" helperText="contraseña" fill="solid" labelPlacement="floating" label="Contraseña" placeholder="contraseña"></ion-input>
+      <ion-input [(ngModel)]="email" type="email" fill="solid" label="Email" labelPlacement="floating" errorText="Email no permitido"></ion-input>
+      <ion-input [(ngModel)]="nombre" fill="solid" labelPlacement="floating" label="Nombre" placeholder="Tu nombre"></ion-input>
+      <ion-input [(ngModel)]="apellidos" fill="solid" labelPlacement="floating" label="Apellidos" placeholder="Apellidos"></ion-input>
+      <ion-input [(ngModel)]="password" type="password"  fill="solid" labelPlacement="floating" label="Contraseña" placeholder="contraseña"></ion-input>
+      <ion-input [(ngModel)]="asignatura" type="text"  fill="solid" labelPlacement="floating" label="Añadir asignatura" placeholder="Añadir asignatura"></ion-input>
+      <ion-button (click)="anadirAsignatura()">+</ion-button>
+      <ion-chip *ngFor="let asignatura of asignaturas">
+        <ion-label>{{ asignatura }}</ion-label>
+        <ion-icon (click) = "eliminarAsignatura(asignatura)" name="close"></ion-icon>
+      </ion-chip>
+      <ion-input [(ngModel)]="curso" type="text" fill="solid" labelPlacement="floating" label="Añadir curso" placeholder="Añadir curso"></ion-input>
+      <ion-button (click)="anadirCurso()">+</ion-button>
+
+
+      <ion-chip *ngFor="let curso of cursos">
+        <ion-label>{{ curso }}</ion-label>
+        <ion-icon (click) = "eliminarCurso(curso)" name="close"></ion-icon>
+      </ion-chip>
 
 
       <ion-footer>

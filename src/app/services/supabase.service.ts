@@ -40,7 +40,7 @@ export class SupabaseService {
 
     return { data };
   }
-  async registerTutor(email: string, password: string, esPadre: boolean, nombre: string, apellidos: string) {
+  async registerTutor(email: string, password: string, userType: string, nombre: string, apellidos: string) {
     try {
       // Intentar registrar al usuario
       const response = await this.supabase.auth.signUp({
@@ -57,11 +57,8 @@ export class SupabaseService {
       const user = response.data.user;
 
       if (user) {
-        // Si es padre, insertar en la tabla "padres", si es profesor, insertar en la tabla "profesores"
-        const tabla = esPadre ? 'padres' : 'profesores';
-
         // Realizar el insert con los datos del formulario
-        const { data, error } = await this.supabase.from(tabla).insert([{
+        const { data, error } = await this.supabase.from("tutores").insert([{
           email: user.email,
           nombre,
           apellidos
@@ -82,5 +79,50 @@ export class SupabaseService {
       throw new Error(error.message);  // Lanza el error para manejarlo en el componente
     }
   }
+
+  async registerProfesor(email: string, password: string, asignaturas:string[], cursos:string[] ,nombre: string, apellidos: string, ) {
+    try {
+      // Intentar registrar al usuario
+      const response = await this.supabase.auth.signUp({
+        email,
+        password,
+      });
+
+      // Verificar si hay un error
+      if (response.error) {
+        throw new Error(response.error.message);  // Lanza el mensaje del error
+      }
+
+      // Si el registro fue exitoso, obtener el usuario
+      const user = response.data.user;
+
+      if (user) {
+        // Si es padre, insertar en la tabla "padres", si es profesor, insertar en la tabla "profesores"
+
+        // Realizar el insert con los datos del formulario
+        const { data, error } = await this.supabase.from("profesores").insert([{
+          email: user.email,
+          nombre,
+          apellidos,
+          asignaturas,
+          cursos
+        }]);
+
+        if (error) {
+          throw new Error(error.message);  // Lanza el error si ocurre un problema con el insert
+        }
+
+        // Si el insert fue exitoso, retorna el usuario
+        return data;
+      } else {
+        throw new Error('Usuario no encontrado después del registro');
+      }
+
+    } catch (error: any) {  // Captura el error y lanza un mensaje
+      console.error('Error al registrar usuario:', error.message);
+      throw new Error(error.message);  // Lanza el error para manejarlo en el componente
+    }
+  }
+  
   
 }
