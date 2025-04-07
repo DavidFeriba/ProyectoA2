@@ -9,12 +9,12 @@ import { SupabaseService } from '../services/supabase.service';
   standalone : false
 })
 export class RegistrarPage implements OnInit {
+  alertButtons = ['Entendido'];
   email: string = '';
   nombre: string = '';
   apellidos: string ='';
   password: string = '';
-  userType: string = 'tutor';
-  selectedRole: string = '';
+  rol: string = 'madre';
   cursos:string[] = [];
   curso:string = '';
   asignaturas:string[] = [];
@@ -28,7 +28,7 @@ export class RegistrarPage implements OnInit {
   registerTutor() { 
 
     // Llamar a la función de registro con los valores del formulario
-    this.supabaseService.registerTutor(this.email, this.password, this.userType,this.nombre,this.apellidos)
+    this.supabaseService.registerTutor(this.email, this.password, this.rol,this.nombre,this.apellidos)
       .then(user => {
         console.log('Usuario registrado', user);
         // Aquí puedes redirigir al usuario o mostrar un mensaje
@@ -66,6 +66,10 @@ export class RegistrarPage implements OnInit {
   eliminarCurso(curso: string) {
     const i = this.asignaturas.indexOf(curso)
     this.cursos.splice(i, 1);
+  }
+
+  debug(){
+    console.log(this.rol); 
   }
 
 

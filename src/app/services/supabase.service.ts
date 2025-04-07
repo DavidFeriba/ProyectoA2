@@ -6,6 +6,9 @@ import { from, Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class SupabaseService {
+  from(arg0: string) {
+    throw new Error('Method not implemented.');
+  }
   private supabase: SupabaseClient;
 
   constructor() {
@@ -13,6 +16,62 @@ export class SupabaseService {
       'https://xihoqjtqwissymcnjrud.supabase.co', // Reemplaza con tu URL
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhpaG9xanRxd2lzc3ltY25qcnVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDI3NTcwNTYsImV4cCI6MjA1ODMzMzA1Nn0.ASXM7c6p368dRN13dS5Gmm0TnSjABkV7Ov4vL7IZMn4' // Reemplaza con tu API Key
     );
+    
+  }
+  get auth() {
+    return this.supabase.auth;
+  }
+  
+  
+  async login(email: string, password: string) {
+    // Iniciar sesión con Supabase
+    const { data, error } = await this.supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    
+    if (error) {
+      console.error('Error de inicio de sesión:', error);
+      return { error };
+    }
+    
+    const user = data?.user;
+
+    if (user) {
+      // Verificar si el usuario está en la tabla de tutores
+      const { data: tutorData, error: tutorError } = await this.supabase
+        .from('tutores')
+        .select('*')
+        .eq('email', email)
+        .single();
+
+      // Verificar si el usuario está en la tabla de profesores
+      const { data: profesorData, error: profesorError } = await this.supabase
+        .from('profesores')
+        .select('*')
+        .eq('email', email)
+        .single();
+        const { data: alumnoData, error: alumnoError } = await this.supabase
+        .from('alumnos')
+        .select('*')
+        .eq('email', email)
+        .single();
+
+      if (tutorData) {
+        // Si es tutor, asignar el rol
+        user.role = 'tutor';
+      } else if (profesorData) {
+        // Si es profesor, asignar el rol
+        user.role = 'profesor';
+      } else if(alumnoData){
+        user.role = 'alumno'
+      }else{
+        console.error('Usuario no encontrado en las tablas de tutores ni profesores');
+        return { error: 'Usuario no encontrado' };
+      }
+    }
+
+    return { user, error };
   }
   
 
@@ -40,7 +99,7 @@ export class SupabaseService {
 
     return { data };
   }
-  async registerTutor(email: string, password: string, userType: string, nombre: string, apellidos: string) {
+  async registerTutor(email: string, password: string, rol: string, nombre: string, apellidos: string) {
     try {
       // Intentar registrar al usuario
       const response = await this.supabase.auth.signUp({
@@ -61,7 +120,8 @@ export class SupabaseService {
         const { data, error } = await this.supabase.from("tutores").insert([{
           email: user.email,
           nombre,
-          apellidos
+          apellidos,
+          rol
         }]);
 
         if (error) {
