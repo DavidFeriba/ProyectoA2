@@ -4,6 +4,7 @@ import { Alumno } from 'src/models/alumno.interface';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { AlertController } from '@ionic/angular';
 import { SupabaseService } from '../services/supabase.service';
+import { Tutor } from 'src/models/tutor.interface';
 
 
 
@@ -16,18 +17,34 @@ import { SupabaseService } from '../services/supabase.service';
   standalone: false
 })
 export class PadresPage implements OnInit {
+  tutor_nombre: string =''
+  tutor_apellidos:string=''
+  tutor_rol:string=''
+  tutor_uid:number = 0
+
   
   today: string;
   public alumnos: Alumno[] = [];
   public selectedPhoto: string = ''; // Almacena la imagen seleccionada
-  supabase: any;
+
 
   constructor(private supabaseService: SupabaseService,private alertController: AlertController, private router:Router) {
     this.today = new Date().toISOString().split("T")[0];
   }
+  
+ 
+  
   async ngOnInit() {
-    this.alumnos = (await this.supabaseService.obtenerUsuarios()) || [];
-    console.log('Usuarios:', this.alumnos);
+    this.alumnos = (await this.supabaseService.obtenerAlumnosDelTutor()) || [];
+    this.supabaseService.getDatosTutor().then(tutor =>{
+      if (tutor) {
+        console.log(this.tutor_uid=tutor.uid)
+      }else{
+        console.log("Adios")
+      }
+    })
+  
+    
   }
 
   async subirImagen(base64String: string): Promise<string | null> {
@@ -182,10 +199,24 @@ export class PadresPage implements OnInit {
       const apellidos: string = data.apellidos
       const foto: string = this.selectedPhoto || 'assets/default-avatar.png'
       const curso : string = data.curso
-
-  
-    await this.supabaseService.addAlumno(nombre, apellidos, curso, foto);
+      try {
+        // Primero obtenemos el tutor
+        const tutor = await this.supabaseService.getDatosTutor(); 
+    
+        // Verificar que el tutor existe
+        if (!tutor) {
+          throw new Error('Tutor no encontrado');
+        }
+    
+        // Pasamos el id del tutor a la función addAlumno
+        await this.supabaseService.addAlumno(nombre, apellidos, curso, foto, tutor.id);
+    
+        console.log('Alumno registrado con éxito');
+      } catch (error) {
+        console.error('Error al registrar el alumno:');
+      }
 
   }
+ 
 
 }

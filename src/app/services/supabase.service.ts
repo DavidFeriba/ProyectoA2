@@ -6,6 +6,7 @@ import { from, Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class SupabaseService {
+  
   from(arg0: string) {
     throw new Error('Method not implemented.');
   }
@@ -20,6 +21,9 @@ export class SupabaseService {
   }
   get auth() {
     return this.supabase.auth;
+  }
+  getUsuarioActual() {
+    return this.supabase.auth.getUser();
   }
   
   
@@ -75,20 +79,91 @@ export class SupabaseService {
   }
   
 
-  async obtenerUsuarios() {
-    const { data, error } = await this.supabase.from('alumnos').select('*');
-    if (error) {
-      console.error('Error al obtener usuarios:', error);
-      return [];  // Si hay error, devolvemos un array vacío
+  async obtenerAlumnosDelTutor() {
+    // Paso 1: Obtener el usuario logueado
+    const { data: { user }, error: userError } = await this.supabase.auth.getUser();
+    if (userError || !user) {
+      console.error('Error al obtener usuario logueado:', userError);
+      return [];
     }
-    console.log('Datos obtenidos de Supabase:', data);  // Agrega esto para ver qué datos recibes
-    return data;
+  
+    // Paso 2: Obtener el ID del tutor con ese user_id
+    const { data: tutorData, error: tutorError } = await this.supabase
+      .from('tutores')
+      .select('id')
+      .eq('uid', user.id)
+      .single();
+  
+    if (tutorError || !tutorData) {
+      console.error('Error al obtener tutor:', tutorError);
+      return [];
+    }
+  
+    const tutorId = tutorData.id;
+  
+    // Paso 3: Buscar alumnos relacionados en la tabla intermedia
+    const { data, error } = await this.supabase
+      .from('tutores_alumnos')
+      .select('alumnos(*)') // Esto trae los datos de la tabla alumnos
+      .eq('tutor_id', tutorId);
+  
+    if (error) {
+      console.error('Error al obtener alumnos del tutor:', error);
+      return [];
+    }
+  
+    // Paso 4: Extraer los alumnos del resultado
+    const alumnos = data.flatMap((registro) => registro.alumnos);
+    console.log('Alumnos asociados al tutor:', alumnos);
+    return alumnos;
   }
 
-
-  async addAlumno(nombre: string, apellidos: string, curso: string, foto: string) {
-    return this.supabase.from('alumnos').insert([{ nombre, apellidos, curso, foto }]);
+;
+  
+  
+  async addAlumno(nombre: string, apellidos: string, curso: string, foto: string, tutorId: number) {
+    try {
+      // Insertar el nuevo alumno en la tabla "alumnos"
+      const { data: alumnoData, error: alumnoError } = await this.supabase.from('alumnos').insert([{
+        nombre,
+        apellidos,
+        foto,
+        curso
+      }]).select();  // Aseguramos que seleccionamos los datos devueltos
+  
+      // Si ocurrió un error al insertar el alumno
+      if (alumnoError) {
+        throw new Error('Error al insertar alumno: ' + alumnoError.message);
+      }
+  
+      // Verificar que `alumnoData` no sea null ni vacío
+      if (!alumnoData || alumnoData.length === 0) {
+        throw new Error('No se insertó ningún alumno');
+      }
+  
+      // Obtener el ID del alumno recién creado
+      const alumnoId = alumnoData[0].id;  // El primer elemento es el alumno insertado
+  
+      // Insertar la relación entre el alumno y el tutor en la tabla "alumno_tutor"
+      const { data: alumnoTutorData, error: alumnoTutorError } = await this.supabase.from('alumno_tutor').insert([{
+        tutor_id: tutorId,
+        alumno_id: alumnoId
+      }]);
+  
+      // Si ocurrió un error al insertar la relación alumno-tutor
+      if (alumnoTutorError) {
+        throw new Error('Error al insertar relación alumno-tutor: ' + alumnoTutorError.message);
+      }
+  
+      // Retornar los datos del alumno y la relación creada
+      return { alumno: alumnoData, alumnoTutor: alumnoTutorData };
+  
+    } catch (error: any) {
+      console.error('Error al agregar alumno:', error.message);
+      throw new Error(error.message);  // Lanza el error para manejarlo en el componente
+    }
   }
+  
   async subirArchivo(bucket: string, filePath: string, file: File) {
     const { data, error } = await this.supabase.storage.from(bucket).upload(filePath, file, { upsert: true });
 
@@ -121,7 +196,9 @@ export class SupabaseService {
           email: user.email,
           nombre,
           apellidos,
-          rol
+          rol,
+          uid: user.id
+
         }]);
 
         if (error) {
@@ -182,6 +259,27 @@ export class SupabaseService {
       console.error('Error al registrar usuario:', error.message);
       throw new Error(error.message);  // Lanza el error para manejarlo en el componente
     }
+  }
+  async getDatosTutor() {
+    const { data: userData, error: userError } = await this.supabase.auth.getUser();
+console.log('User data:', userData);  // Verifica el contenido de userData
+if (userError || !userData.user) {
+  throw new Error('No se pudo obtener el usuario logueado');
+}
+  
+    const userId = userData.user.id;
+  
+    const { data: tutor, error } = await this.supabase
+      .from('tutores')
+      .select('*')
+      .eq('uid', userId)
+      .single();
+  
+    if (error) {
+      throw new Error('No se encontró al tutor');
+    }
+  
+    return tutor;
   }
   
   
