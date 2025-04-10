@@ -29,7 +29,12 @@ email: string = '';
       console.error('Error al iniciar sesión:', error);
     }
   }
-  ngOnInit() {
+  async ngOnInit() {
+    const { data } = await this.supabase.auth.getSession();
+    const session = data.session;
+    if (session){
+      this.router.navigate(['/padres'])
+    }
   }
 
 }

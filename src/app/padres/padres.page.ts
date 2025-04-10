@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Alumno } from 'src/models/alumno.interface';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
-import { AlertController } from '@ionic/angular';
+import { AlertController, ToastController } from '@ionic/angular';
 import { SupabaseService } from '../services/supabase.service';
 import { Tutor } from 'src/models/tutor.interface';
 
@@ -20,7 +20,8 @@ export class PadresPage implements OnInit {
   tutor_nombre: string =''
   tutor_apellidos:string=''
   tutor_rol:string=''
-  tutor_uid:number = 0
+  tutor_uid:string = ''
+  tutor_vinculado_id: number= -1
 
   
   today: string;
@@ -28,21 +29,29 @@ export class PadresPage implements OnInit {
   public selectedPhoto: string = ''; // Almacena la imagen seleccionada
 
 
-  constructor(private supabaseService: SupabaseService,private alertController: AlertController, private router:Router) {
+  constructor(private toastController: ToastController,private supabaseService: SupabaseService,private alertController: AlertController, private router:Router) {
     this.today = new Date().toISOString().split("T")[0];
   }
   
  
   
   async ngOnInit() {
-    this.alumnos = (await this.supabaseService.obtenerAlumnosDelTutor()) || [];
-    this.supabaseService.getDatosTutor().then(tutor =>{
-      if (tutor) {
-        console.log(this.tutor_uid=tutor.uid)
-      }else{
-        console.log("Adios")
-      }
-    })
+    
+    const tutor = await this.supabaseService.getDatosTutor();
+
+    if (tutor) {
+      this.tutor_uid = tutor.uid;
+      this.tutor_vinculado_id = tutor.vinculado_id;
+      console.log(this.tutor_uid);
+      const alumnosPropios = await this.supabaseService.obtenerAlumnosDelTutor(this.tutor_uid) || [];
+      const alumnosVinculado = await this.supabaseService.obtenerAlumnosDelTutor(this.tutor_vinculado_id);
+      this.alumnos = alumnosPropios.concat(alumnosVinculado)
+      
+
+
+    } else {
+      console.log("Adios");
+    }
   
     
   }
@@ -83,13 +92,71 @@ export class PadresPage implements OnInit {
   
     return new File(byteArrays, filename, { type: 'image/png' }); // ✅ Asegurar el return
   }
+  async vincularAlert(){
+    if (this.tutor_vinculado_id == null) {
+      const alert = await this.alertController.create({
+        header: 'Vinculación de otro usuario para compartir los hijos', 
+        inputs: [
+          {
+            name: "correo",
+            type: "text",
+            placeholder: 'Correo electrónico de tu compañero',
+          },
+        ],
+        
+        buttons: [
+          {
+            text: 'Cancelar',
+            role: 'cancel',
+          },
+          {
+            
+            text:'Enviar petición',
+            handler: async (data) => {
+              const correo: string = data.correo
+             const errorYaVinculado = await this.supabaseService.vincularTutores(this.tutor_uid, correo)
+             if (errorYaVinculado){
+              this.yaVinculadoToast()
+             }
+            },
+          },
+        ]
+      }
+      
+    )    
+    await alert.present()
+    }else{
+      const alert = await this.alertController.create({
+        header: 'Ya tienes a tu compañero vinculado', 
+        buttons: [
+          {
+            text: 'Cancelar',
+            role: 'cancel',
+          },
+          {
+            
+            text:'Eliminar vínculo',
+            handler: () => {
+              this.supabaseService.eliminarVinculo(this.tutor_uid,this.tutor_vinculado_id)
+            },
+          },
+        ]
+      }
+    )    
+    await alert.present()
+    }
+    
+ 
+   
   
 
+  }
+
 
 
   
 
-  async presentAlert(initialData: any={}) {
+  async anadirAlert(initialData: any={}) {
     const imageSrc = this.selectedPhoto || '../assets/default-avatar.png';
   const imageHtml = `<img src="${imageSrc}" alt="Foto" style="max-width: 100%; height: auto; margin: 10px auto; display: block; border-radius: 5px;" />`;
     const alert = await this.alertController.create({
@@ -216,7 +283,22 @@ export class PadresPage implements OnInit {
         console.error('Error al registrar el alumno:');
       }
 
+  }async yaVinculadoToast() {
+    const toast = await this.toastController.create({
+      message: 'Este tutor ya está vinculado',
+      duration: 3000,
+      color: 'danger',
+      position: 'bottom',
+    });
+    await toast.present();
   }
+
+  cerrarSesion(){
+    this.alumnos=[]
+    this.supabaseService.cerrarSesion()
+    this.router.navigate(['/home'])
+  }
+  
  
 
 }

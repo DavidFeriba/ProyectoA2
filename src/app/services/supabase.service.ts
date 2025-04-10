@@ -25,6 +25,10 @@ export class SupabaseService {
   getUsuarioActual() {
     return this.supabase.auth.getUser();
   }
+
+  cerrarSesion(){
+    this.supabase.auth.signOut()
+  }
   
   
   async login(email: string, password: string) {
@@ -78,47 +82,46 @@ export class SupabaseService {
     return { user, error };
   }
   
-
-  async obtenerAlumnosDelTutor() {
-    // Paso 1: Obtener el usuario logueado
-    const { data: { user }, error: userError } = await this.supabase.auth.getUser();
-    if (userError || !user) {
-      console.error('Error al obtener usuario logueado:', userError);
-      return [];
-    }
-  
-    // Paso 2: Obtener el ID del tutor con ese user_id
+  async  obtenerAlumnosDelTutor(uidTutor: string | number) {
+    if(typeof uidTutor === 'string'){
     const { data: tutorData, error: tutorError } = await this.supabase
       .from('tutores')
       .select('id')
-      .eq('uid', user.id)
+      .eq('uid', uidTutor)
       .single();
   
     if (tutorError || !tutorData) {
-      console.error('Error al obtener tutor:', tutorError);
+      console.error('Error obteniendo tutor:', tutorError);
       return [];
     }
   
-    const tutorId = tutorData.id;
+    const { data: alumnosData, error: alumnosError } = await this.supabase
+      .from('alumno_tutor')
+      .select('alumnos(id, nombre, apellidos, foto, curso)')
+      .eq('tutor_id', tutorData.id);
   
-    // Paso 3: Buscar alumnos relacionados en la tabla intermedia
-    const { data, error } = await this.supabase
-      .from('tutores_alumnos')
-      .select('alumnos(*)') // Esto trae los datos de la tabla alumnos
-      .eq('tutor_id', tutorId);
-  
-    if (error) {
-      console.error('Error al obtener alumnos del tutor:', error);
+    if (alumnosError) {
+      console.error('Error obteniendo alumnos:', alumnosError);
       return [];
     }
   
-    // Paso 4: Extraer los alumnos del resultado
-    const alumnos = data.flatMap((registro) => registro.alumnos);
-    console.log('Alumnos asociados al tutor:', alumnos);
-    return alumnos;
+    return alumnosData.flatMap(entry => entry.alumnos);
+  }else{
+    const { data: alumnosData, error: alumnosError } = await this.supabase
+    .from('alumno_tutor')
+    .select('alumnos(id, nombre, apellidos, foto, curso)')
+    .eq('tutor_id', uidTutor);
+    
+    if (alumnosError) {
+      console.error('Error obteniendo alumnos:', alumnosError);
+      return [];
+    }
+  
+    return alumnosData.flatMap(entry => entry.alumnos);
   }
+  }
+  
 
-;
   
   
   async addAlumno(nombre: string, apellidos: string, curso: string, foto: string, tutorId: number) {
@@ -280,6 +283,30 @@ if (userError || !userData.user) {
     }
   
     return tutor;
+  }
+  async vincularTutores(tutor_uid:string, correoDestino:string):Promise<boolean>{
+    
+    const {data: tutorCorreo, error:errorCorreo} = await this.supabase.from('tutores').select('id, vinculado_id').eq('email',correoDestino).single();
+    const {data: tutorOriginal, error: errorOriginal} = await this.supabase.from('tutores').select('id').eq('uid',tutor_uid).single();
+    console.log('Error tutorCorreo:', errorCorreo);
+console.log('Error tutorOriginal:', errorOriginal);
+    if (errorCorreo || errorOriginal) {
+      
+      throw new Error('Error al obtener los tutores')
+    }
+    console.log('tutorCorreo:', tutorCorreo);
+console.log('tutorOriginal:', tutorOriginal);
+if(!tutorCorreo.vinculado_id == null){
+    const {error: errorVincularDestino} = await this.supabase.from('tutores').update({vinculado_id: tutorOriginal.id}).eq('email', correoDestino)
+    const {error: errorVincularOriginal} = await this.supabase.from('tutores').update({vinculado_id: tutorCorreo.id}).eq('uid', tutor_uid)
+    return false
+  }else{
+    return true
+  }
+  }
+  async eliminarVinculo(tutor_uid:string,tutor_vinc_id:number){
+    await this.supabase.from('tutores').update({vinculado_id:null}).eq('uid',tutor_uid)
+    await this.supabase.from('tutores').update({vinculado_id:null}).eq('id',tutor_vinc_id)
   }
   
   

@@ -13,3 +13,21 @@ ion-card img {
   border-top-left-radius: 12px; /* Ajusta el radio de las esquinas si es necesario */
   border-top-right-radius: 12px;
 }
+ion-menu::part(backdrop) {
+  background-color: rgba(255, 0, 255, 0.5);
+}
+
+ion-menu::part(container) {
+  border-radius: 0 20px 20px 0;
+
+  box-shadow: 4px 0px 16px rgba(255, 0, 255, 0.18);
+}
+.salir-text {
+  margin-right: 5px; /* Espacio a la derecha del texto */
+  padding: 5px; /* Agregar espacio alrededor del texto */
+}
+
+.salir-button {
+  margin-left: 5px; /* Espacio a la izquierda del icono */
+  padding: 5px; /* Espacio alrededor del icono */
+}

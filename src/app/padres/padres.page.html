@@ -1,30 +1,74 @@
-<ion-content [fullscreen]="true">
-  <ion-toolbar>
-    <ion-title size="large">Bienvenido, Padre</ion-title>
-  </ion-toolbar>
+<ion-app>
+  <!-- Menu lateral -->
+  <ion-menu contentId="main-content">
+    <ion-header>
+      <ion-toolbar color="tertiary">
+        <ion-title>Opciones</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    
+    <!-- Contenido del menú lateral con un item de ejemplo -->
+    <ion-content class="ion-padding">
+      <ion-list>
+        <ion-item button id="open-toast" (click)="vincularAlert()">
+          <ion-icon name="people-circle-outline" slot="start"></ion-icon>
+          <ion-label>Vincular</ion-label>
+        </ion-item>
+        <ion-item button>
+          <ion-icon name="mail-outline" slot="start"></ion-icon>
+          <ion-label>Peticiones</ion-label>
+        </ion-item>
+        <ion-item button (click)="anadirAlert()">
+          <ion-icon name="add-outline" slot="start"></ion-icon>
+          <ion-label>Añadir</ion-label>
+        </ion-item>
+        
+      </ion-list>
+    
+    </ion-content>
 
-  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
-    <ion-fab-button>
-      <ion-icon name="chevron-up-circle"></ion-icon>
-    </ion-fab-button>
-    <ion-fab-list side="top">
-      <ion-fab-button (click)="presentAlert()">
-        <ion-icon size="large" name="add-outline"></ion-icon>
-      </ion-fab-button>
-    </ion-fab-list>
-  </ion-fab>
-  <ion-grid>
-    <ion-row>
-      
-      <ion-col size="12" size-md="6" size-lg="4" *ngFor="let alumno of alumnos">
-        <ion-card>
-          <img [routerLink]="['/hijo',alumno.id]" [src]="alumno.foto" alt="Foto de {{ alumno.nombre }}">
-          <ion-card-header>
-            <ion-card-title>{{alumno.nombre}}</ion-card-title>
-            <ion-card-subtitle>{{alumno.apellidos}} || {{alumno.curso}}º</ion-card-subtitle>
-          </ion-card-header>
-        </ion-card>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
-  
+    <!-- Footer para el menu -->
+    <ion-footer>
+      <ion-toolbar>
+        <p slot="end" class="salir-text">Cerrar sesión</p>
+        <ion-buttons slot="end" class="salir-button" (click)="cerrarSesion()">
+          <ion-icon size="large" name="exit-outline"></ion-icon>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-footer>
+  </ion-menu>
+
+  <!-- Contenido principal -->
+  <div class="ion-page" id="main-content">
+    <ion-header>
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-title>Bienvenido, padre</ion-title>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content [fullscreen]="true">
+      <ion-toolbar>
+        <ion-title size="large">Bienvenido, Padre</ion-title>
+      </ion-toolbar>
+
+
+      <!-- Grid de alumnos -->
+      <ion-grid>
+        <ion-row>
+          <ion-col size="12" size-md="6" size-lg="4" *ngFor="let alumno of alumnos">
+            <ion-card>
+              <img [routerLink]="['/hijo', alumno.id]" [src]="alumno.foto" alt="Foto de {{ alumno.nombre }}">
+              <ion-card-header>
+                <ion-card-title>{{ alumno.nombre }}</ion-card-title>
+                <ion-card-subtitle>{{ alumno.apellidos }} || {{ alumno.curso }}º</ion-card-subtitle>
+              </ion-card-header>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-content>
+  </div>
+</ion-app>

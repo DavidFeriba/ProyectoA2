@@ -7,9 +7,9 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-card color="primary" routerLink="/login">
+  <ion-card color="primary">
     <ion-card-header>
-      <ion-card-title class="centrar">Padres</ion-card-title>    </ion-card-header>
+      <ion-card-title (click)="login()" class="centrar">Padres</ion-card-title>    </ion-card-header>
   </ion-card>
   <ion-card color="success" routerLink="/alumnos">
     <ion-card-header>
