@@ -24,13 +24,12 @@ export class PadresPage implements OnInit {
   tutor_vinculado_id: number= -1
 
   
-  today: string;
+
   public alumnos: Alumno[] = [];
   public selectedPhoto: string = ''; // Almacena la imagen seleccionada
 
 
   constructor(private toastController: ToastController,private supabaseService: SupabaseService,private alertController: AlertController, private router:Router) {
-    this.today = new Date().toISOString().split("T")[0];
   }
   
  
@@ -93,7 +92,7 @@ export class PadresPage implements OnInit {
     return new File(byteArrays, filename, { type: 'image/png' }); // ✅ Asegurar el return
   }
   async vincularAlert(){
-    if (this.tutor_vinculado_id == null) {
+    if (this.tutor_vinculado_id <= 0) {
       const alert = await this.alertController.create({
         header: 'Vinculación de otro usuario para compartir los hijos', 
         inputs: [
@@ -117,6 +116,9 @@ export class PadresPage implements OnInit {
              const errorYaVinculado = await this.supabaseService.vincularTutores(this.tutor_uid, correo)
              if (errorYaVinculado){
               this.yaVinculadoToast()
+             }else{
+              const tutor = await this.supabaseService.getDatosTutor();
+              this.tutor_vinculado_id = tutor.vinculado_id
              }
             },
           },
@@ -138,6 +140,7 @@ export class PadresPage implements OnInit {
             text:'Eliminar vínculo',
             handler: () => {
               this.supabaseService.eliminarVinculo(this.tutor_uid,this.tutor_vinculado_id)
+              this.tutor_vinculado_id = -1
             },
           },
         ]
@@ -177,7 +180,7 @@ export class PadresPage implements OnInit {
         },
         {
           name: "curso",
-          type: 'number',
+          type: 'text',
           placeholder: 'Curso',
           min: 1,
           max: 6,
@@ -261,6 +264,8 @@ export class PadresPage implements OnInit {
   }
 
   async addAlumno(data: any) {
+      const pin = Math.floor(10000 + Math.random() * 90000);
+      console.log(pin);
       console.log("DATOS: ")
       const nombre: string = data.nombre
       const apellidos: string = data.apellidos
@@ -276,7 +281,7 @@ export class PadresPage implements OnInit {
         }
     
         // Pasamos el id del tutor a la función addAlumno
-        await this.supabaseService.addAlumno(nombre, apellidos, curso, foto, tutor.id);
+        await this.supabaseService.addAlumno(nombre, apellidos, curso, foto, tutor.id,pin);
     
         console.log('Alumno registrado con éxito');
       } catch (error) {

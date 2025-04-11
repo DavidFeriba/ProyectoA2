@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Route, Router } from '@angular/router';
+import { SupabaseService } from '../services/supabase.service';
 
 
 @Component({
@@ -10,6 +11,8 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class AlumnosPage implements OnInit {
   today: string;
+  id : string = ''
+ 
 
   highlightedDates = [
     {
@@ -34,9 +37,13 @@ export class AlumnosPage implements OnInit {
     },
   ];
 
-  constructor(private router:ActivatedRoute) {
+  constructor(private router:ActivatedRoute, private router2:Router, private supabase:SupabaseService) {
     this.today = new Date().toISOString().split("T")[0]; // Formato YYYY-MM-DD
+    this.router.params.subscribe(params => {
+      this.id = params['id'];
+    })
    }
+
 
   ngOnInit() {
   }

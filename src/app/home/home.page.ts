@@ -12,14 +12,22 @@ export class HomePage {
 
   constructor(private router:Router, private supabase:SupabaseService) {}
 
-  async login(){
-    const { data } = await this.supabase.auth.getSession();
-    const session = data.session;
-    if (session){
+  async loginPadres(){
+    const tipoUsuario = await this.supabase.comprobarLogin()
+    if (tipoUsuario == "tutor") {
       this.router.navigate(['/padres'])
     }else{
       this.router.navigate(['/login'])
     }
   }
+  async loginProfesorado(){
+    const tipoUsuario = await this.supabase.comprobarLogin()
+    if (tipoUsuario == "profesor") {
+      this.router.navigate(['/profesorado'])
+    }else{
+      this.router.navigate(['/profesorado-login'])
+    }
+  }
+
 
 }

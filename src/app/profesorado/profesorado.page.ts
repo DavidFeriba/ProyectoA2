@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IonModal } from '@ionic/angular';
+import { IonModal, ModalController } from '@ionic/angular';
 import { Alumno } from 'src/models/alumno.interface';
+import { SupabaseService } from '../services/supabase.service';
 
 @Component({
   selector: 'app-profesorado',
@@ -10,7 +11,10 @@ import { Alumno } from 'src/models/alumno.interface';
   standalone: false
 })
 export class ProfesoradoPage implements OnInit {
+  message = 'This modal example uses the modalController to present and dismiss modals.';
+
   today: string;
+  profesor_uid: string = '';
   public alumnos:Alumno[] = [];
   public alertButtons = [
     {
@@ -65,8 +69,9 @@ export class ProfesoradoPage implements OnInit {
         backgroundColor: 'rgb(211, 200, 229)',
       },
     ];
+
   
-    constructor(private router:ActivatedRoute, private router2:Router) {
+    constructor(private modalCtrl: ModalController, private supabase: SupabaseService,private router:ActivatedRoute, private router2:Router) {
       this.today = new Date().toISOString().split("T")[0]; // Formato YYYY-MM-DD
      }
      closeModal(modal: IonModal) {
@@ -78,11 +83,34 @@ export class ProfesoradoPage implements OnInit {
       console.log(this.alertInputs[0])
       // Aquí puedes realizar cualquier acción que necesites
     }
+    async openModal() {
+      const modal = await this.modalCtrl.create({
+        component: ModalAnadirTareaComponent,
+      });
+      modal.present();
+  
+      const { data, role } = await modal.onWillDismiss();
+  
+      if (role === 'confirm') {
+        this.message = `Hello, ${data}!`;
+      }
+    }
     
 
 
 
-  ngOnInit() {
+  async ngOnInit() {
+    const profesor = await this.supabase.getDatosProfesor();
+
+    if (profesor) {
+      this.profesor_uid = profesor.uid;
+      this.alumnos = await this.supabase.obtenerAlumnosDelProfesor(this.profesor_uid) || [];
+      console.log(this.alumnos)
+
+
+    } else {
+      console.log("Adios");
+    }
   }
 
 }

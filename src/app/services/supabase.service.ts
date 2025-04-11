@@ -30,56 +30,77 @@ export class SupabaseService {
     this.supabase.auth.signOut()
   }
   
-  
-  async login(email: string, password: string) {
-    // Iniciar sesión con Supabase
+  async loginTutor(email: string, password: string){
     const { data, error } = await this.supabase.auth.signInWithPassword({
       email,
       password,
     });
-    
-    if (error) {
-      console.error('Error de inicio de sesión:', error);
-      return { error };
+    if (error || !data?.user) {
+      console.error('Error de inicio de sesión o usuario no válido:', error);
+      return false;
     }
-    
     const user = data?.user;
 
-    if (user) {
-      // Verificar si el usuario está en la tabla de tutores
       const { data: tutorData, error: tutorError } = await this.supabase
         .from('tutores')
         .select('*')
         .eq('email', email)
         .single();
+       
+        if (tutorError || !tutorData) {
+          console.error('No se encontró el tutor o error:', tutorError);
+          return false;
+        }
+    return true;
+  }
+  async loginProfesor(email: string, password: string){
+    const { data, error } = await this.supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    if (error || !data?.user) {
+      console.error('Error de inicio de sesión o usuario no válido:', error);
+      return false;
+    }
+    const user = data?.user;
 
-      // Verificar si el usuario está en la tabla de profesores
       const { data: profesorData, error: profesorError } = await this.supabase
         .from('profesores')
         .select('*')
         .eq('email', email)
         .single();
-        const { data: alumnoData, error: alumnoError } = await this.supabase
-        .from('alumnos')
-        .select('*')
-        .eq('email', email)
-        .single();
+       
+        if (profesorError || !profesorData) {
+          console.error('No se encontró el tutor o error:', profesorError);
+          return false;
+        }
 
-      if (tutorData) {
-        // Si es tutor, asignar el rol
-        user.role = 'tutor';
-      } else if (profesorData) {
-        // Si es profesor, asignar el rol
-        user.role = 'profesor';
-      } else if(alumnoData){
-        user.role = 'alumno'
-      }else{
-        console.error('Usuario no encontrado en las tablas de tutores ni profesores');
-        return { error: 'Usuario no encontrado' };
-      }
+    return true;
+  }
+  async  obtenerAlumnosDelProfesor(uidProfesor: string | number) {
+    console.log("HOLA")
+    const { data: profesorData, error: profesorError } = await this.supabase
+      .from('profesores')
+      .select('cursos')
+      .eq('uid', uidProfesor)
+      .single();
+  
+    if (profesorError || !profesorData) {
+      console.error('Error obteniendo tutor:', profesorError);
+      return [];
     }
-
-    return { user, error };
+    const cursos = profesorData.cursos;
+    const { data: alumnosData, error: alumnosError } = await this.supabase
+    .from('alumnos')
+    .select('*')
+    .in('curso', cursos);
+    if (alumnosError) {
+      console.error('Error obteniendo alumnos:', alumnosError);
+      return [];
+    }
+    console.log(cursos)
+    console.log(alumnosData.flatMap)
+    return alumnosData
   }
   
   async  obtenerAlumnosDelTutor(uidTutor: string | number) {
@@ -124,14 +145,15 @@ export class SupabaseService {
 
   
   
-  async addAlumno(nombre: string, apellidos: string, curso: string, foto: string, tutorId: number) {
+  async addAlumno(nombre: string, apellidos: string, curso: string, foto: string, tutorId: number, pin: number) {
     try {
       // Insertar el nuevo alumno en la tabla "alumnos"
       const { data: alumnoData, error: alumnoError } = await this.supabase.from('alumnos').insert([{
         nombre,
         apellidos,
         foto,
-        curso
+        curso,
+        pin
       }]).select();  // Aseguramos que seleccionamos los datos devueltos
   
       // Si ocurrió un error al insertar el alumno
@@ -245,7 +267,8 @@ export class SupabaseService {
           nombre,
           apellidos,
           asignaturas,
-          cursos
+          cursos,
+          uid: user.id
         }]);
 
         if (error) {
@@ -262,6 +285,27 @@ export class SupabaseService {
       console.error('Error al registrar usuario:', error.message);
       throw new Error(error.message);  // Lanza el error para manejarlo en el componente
     }
+  }
+  async getDatosProfesor() {
+    const { data: userData, error: userError } = await this.supabase.auth.getUser();
+console.log('User data:', userData);  // Verifica el contenido de userData
+if (userError || !userData.user) {
+  throw new Error('No se pudo obtener el usuario logueado');
+}
+  
+    const userId = userData.user.id;
+  
+    const { data: profesor, error } = await this.supabase
+      .from('profesores')
+      .select('*')
+      .eq('uid', userId)
+      .single();
+  
+    if (error) {
+      throw new Error('No se encontró al tutor');
+    }
+  
+    return profesor;
   }
   async getDatosTutor() {
     const { data: userData, error: userError } = await this.supabase.auth.getUser();
@@ -296,9 +340,9 @@ console.log('Error tutorOriginal:', errorOriginal);
     }
     console.log('tutorCorreo:', tutorCorreo);
 console.log('tutorOriginal:', tutorOriginal);
-if(!tutorCorreo.vinculado_id == null){
-    const {error: errorVincularDestino} = await this.supabase.from('tutores').update({vinculado_id: tutorOriginal.id}).eq('email', correoDestino)
-    const {error: errorVincularOriginal} = await this.supabase.from('tutores').update({vinculado_id: tutorCorreo.id}).eq('uid', tutor_uid)
+if(tutorCorreo.vinculado_id == null){
+    await this.supabase.from('tutores').update({vinculado_id: tutorOriginal.id}).eq('email', correoDestino)
+    await this.supabase.from('tutores').update({vinculado_id: tutorCorreo.id}).eq('uid', tutor_uid)
     return false
   }else{
     return true
@@ -308,6 +352,47 @@ if(!tutorCorreo.vinculado_id == null){
     await this.supabase.from('tutores').update({vinculado_id:null}).eq('uid',tutor_uid)
     await this.supabase.from('tutores').update({vinculado_id:null}).eq('id',tutor_vinc_id)
   }
+  async confirmarPin(pin:number) {
+  
+    const { data: alumno, error } = await this.supabase
+      .from('alumnos')
+      .select('*')
+      .eq('pin', pin)
+      .single();
+  
+    if (error) {
+      throw new Error('No se encontró al tutor');
+    }
+  
+    return alumno;
+  }
+  async comprobarLogin(){
+    const { data } = await this.supabase.auth.getSession();
+    const session = data.session;
+    if(session){
+      console.log('Session User ID:', session.user.id);
+      const { data: tutor, error:tutorError } = await this.supabase
+      .from('tutores')
+      .select('id')
+      .eq('uid', session.user.id)
+      .single();
+      if (tutor && !tutorError) {
+        return "tutor";
+      }
+      const { data: profesor ,error: profesorError} = await this.supabase
+      .from('profesores')
+      .select('id')
+      .eq('uid', session.user.id)
+      .single();
+
+      
+      if (profesor && !profesorError) {
+        return "profesor";
+      }
+    }
+    return "nada"
+  }
+
   
   
 }

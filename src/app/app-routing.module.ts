@@ -12,7 +12,7 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
-    path: 'alumnos',
+    path: 'alumnos/:id',
     loadChildren: () => import('./alumnos/alumnos.module').then( m => m.AlumnosPageModule)
   },
   {
@@ -34,6 +34,14 @@ const routes: Routes = [
   {
     path: 'login',
     loadChildren: () => import('./login/login.module').then( m => m.LoginPageModule)
+  },
+  {
+    path: 'alumnos-login',
+    loadChildren: () => import('./alumnos-login/alumnos-login.module').then( m => m.AlumnosLoginPageModule)
+  },
+  {
+    path: 'profesorado-login',
+    loadChildren: () => import('./profesorado-login/profesorado-login.module').then( m => m.ProfesoradoLoginPageModule)
   },
  
 ];

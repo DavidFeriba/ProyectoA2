@@ -9,15 +9,15 @@
 <ion-content [fullscreen]="true">
   <ion-card color="primary">
     <ion-card-header>
-      <ion-card-title (click)="login()" class="centrar">Padres</ion-card-title>    </ion-card-header>
+      <ion-card-title (click)="loginPadres()" class="centrar">Padres</ion-card-title>    </ion-card-header>
   </ion-card>
-  <ion-card color="success" routerLink="/alumnos">
+  <ion-card color="success" routerLink="/alumnos-login">
     <ion-card-header>
       <ion-card-title class="centrar">Alumnos</ion-card-title>    </ion-card-header>
   </ion-card>
-  <ion-card color="warning" routerLink="/profesorado">
+  <ion-card color="warning">
     <ion-card-header>
-      <ion-card-title class="centrar">Profesorado</ion-card-title>    </ion-card-header>
+      <ion-card-title  (click)="loginProfesorado()" class="centrar">Profesorado</ion-card-title>    </ion-card-header>
   </ion-card>
 
 </ion-content>

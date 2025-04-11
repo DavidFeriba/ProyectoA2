@@ -1,0 +1,14 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Iniciar sesión</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <form (ngSubmit)="login()">
+    <ion-input [(ngModel)]="email" type="email" name="email" placeholder="Correo electrónico" required></ion-input>
+    <ion-input [(ngModel)]="password" type="password" name="password" placeholder="Contraseña" required></ion-input>
+
+    <ion-button expand="full" type="submit">Iniciar sesión</ion-button>
+  </form>
+</ion-content>

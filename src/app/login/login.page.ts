@@ -14,27 +14,19 @@ email: string = '';
   constructor(private router:Router, private supabase: SupabaseService) {}
   async login() {
     try {
-      const { user, error } = await this.supabase.login(this.email, this.password);
-
-      if (error) {
-        console.error('Error de inicio de sesión:', error);
-        return;
-      }
-
+      const existe = await this.supabase.loginTutor(this.email, this.password);
       // Aquí se determina el tipo de usuario según la tabla encontrada
-      if (user){
+      if (existe){
         this.router.navigate(['/padres']);
+      }else{
+        this.supabase.cerrarSesion()
       }
     } catch (error) {
       console.error('Error al iniciar sesión:', error);
     }
   }
   async ngOnInit() {
-    const { data } = await this.supabase.auth.getSession();
-    const session = data.session;
-    if (session){
-      this.router.navigate(['/padres'])
-    }
+    
   }
 
 }
