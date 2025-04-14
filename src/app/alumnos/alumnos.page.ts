@@ -10,9 +10,11 @@ import { SupabaseService } from '../services/supabase.service';
   standalone: false
 })
 export class AlumnosPage implements OnInit {
+  vistaSeleccionada:string ='semana'
   today: string;
+  diasSemana: Date[] = [];
   id : string = ''
- 
+
 
   highlightedDates = [
     {
@@ -45,7 +47,24 @@ export class AlumnosPage implements OnInit {
    }
 
 
-  ngOnInit() {
+   ngOnInit() {
+    this.generarDiasSemana()
   }
 
+  generarDiasSemana() {
+    const hoy = new Date();
+    const diaSemana = hoy.getDay() === 0 ? 7 : hoy.getDay(); // domingo como 7
+    const lunes = new Date(hoy);
+    lunes.setDate(hoy.getDate() - diaSemana + 1);
+
+    this.diasSemana = [];
+
+    for (let i = 0; i < 7; i++) {
+      const dia = new Date(lunes);
+      dia.setDate(lunes.getDate() + i);
+      this.diasSemana.push(dia);
+    }
+
+
+}
 }

@@ -1,11 +1,47 @@
-
 <ion-content [fullscreen]="true">
+  <ion-header [translucent]="true">
     <ion-toolbar>
-      <ion-title size="large">alumnos</ion-title>
-      <ion-header [translucent]="true">
-        <ion-toolbar>
-          <ion-datetime  presentation="date" value={{today}} [highlightedDates]="highlightedDates"></ion-datetime>
-        </ion-toolbar>
-      </ion-header>
+      <ion-title size="large">Alumnos</ion-title>
     </ion-toolbar>
+
+
+    <!-- Selector de vista -->
+    <ion-toolbar>
+      <ion-segment [(ngModel)]="vistaSeleccionada">
+        <ion-segment-button value="mes">
+          <ion-label>Mes</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="semana">
+          <ion-label>Semana</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+    </ion-toolbar>
+
+
+    <!-- Vista mensual -->
+    <ng-container *ngIf="vistaSeleccionada === 'mes'">
+      <ion-toolbar>
+        <ion-datetime
+          presentation="date"
+          [value]="today"
+          [highlightedDates]="highlightedDates">
+        </ion-datetime>
+      </ion-toolbar>
+    </ng-container>
+
+
+    <!-- Vista semanal -->
+    <ng-container *ngIf="vistaSeleccionada === 'semana'">
+      <ion-toolbar>
+        <ion-grid>
+          <ion-row>
+            <ion-col *ngFor="let dia of diasSemana">
+              <div>{{ dia | date: 'EEE dd/MM' }}</div>
+              <!-- Aquí podrías mostrar tareas del día -->
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-toolbar>
+    </ng-container>
+  </ion-header>
 </ion-content>

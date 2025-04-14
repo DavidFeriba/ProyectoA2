@@ -400,7 +400,8 @@ if(tutorCorreo.vinculado_id == null){
       actividades: actividades,
       anotacion: data.anotacion,
       curso: data.curso,
-      id_profesor: data.id
+      id_profesor: data.id,
+      f_limite: data.f_limite
     }])
     if (error) {
       console.error("Error al insertar tarea:", error.message);

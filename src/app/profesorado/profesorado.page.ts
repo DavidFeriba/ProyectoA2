@@ -197,7 +197,13 @@ export class ProfesoradoPage implements OnInit {
         name: 'ultimaActividad',
         type: 'text',
         placeholder: 'Hasta actividad y'
-      },{
+      },
+      {
+        name: 'f_limite',
+        type: 'date',
+        placeholder: 'Fecha límite'
+      },
+      {
         name: 'anotacion',
         type: 'textarea',
         placeholder: 'Anotación'
