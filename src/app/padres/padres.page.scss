@@ -1,0 +1,33 @@
+ion-fab{
+  margin-bottom: 16px;
+  margin-right: 16px;
+}
+ion-card {
+  max-width: 350px; /* Ajusta el ancho máximo del card */
+  margin: 10px auto; /* Centra el card horizontalmente */
+}
+ion-card img {
+  width: 100%; /* Hace que la imagen ocupe todo el ancho del card */
+  height: auto; /* Mantiene la proporción de la imagen */
+  display: block; /* Elimina cualquier espacio adicional alrededor de la imagen */
+  border-top-left-radius: 12px; /* Ajusta el radio de las esquinas si es necesario */
+  border-top-right-radius: 12px;
+}
+ion-menu::part(backdrop) {
+  background-color: rgba(255, 0, 255, 0.5);
+}
+
+ion-menu::part(container) {
+  border-radius: 0 20px 20px 0;
+
+  box-shadow: 4px 0px 16px rgba(255, 0, 255, 0.18);
+}
+.salir-text {
+  margin-right: 5px; /* Espacio a la derecha del texto */
+  padding: 5px; /* Agregar espacio alrededor del texto */
+}
+
+.salir-button {
+  margin-left: 5px; /* Espacio a la izquierda del icono */
+  padding: 5px; /* Espacio alrededor del icono */
+}

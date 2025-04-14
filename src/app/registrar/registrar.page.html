@@ -1,0 +1,89 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Registro</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-segment >
+    <ion-segment-button value="tutor" content-id="tutor">
+      <ion-label>Tutor</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="profesor" content-id="profesor">
+      <ion-label>Profesor</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <ion-segment-view>
+    <ion-segment-content id="tutor">
+      <ion-input [(ngModel)]="email" type="email" fill="solid" label="Email" labelPlacement="floating"  errorText="Email no permitido"></ion-input>
+      <ion-input [(ngModel)]="nombre"  fill="solid" labelPlacement="floating" label="Nombre" placeholder="Tu nombre"></ion-input>
+      <ion-input [(ngModel)]="apellidos" fill="solid" labelPlacement="floating" label="Apellidos" placeholder="Apellidos"></ion-input>
+      <ion-input [(ngModel)]="password" type="password"  fill="solid" labelPlacement="floating" label="Contraseña" placeholder="contraseña"></ion-input>
+      <ion-radio-group (click) =debug() [(ngModel)]="rol">
+        <ion-item>
+          <ion-label>Padre</ion-label>
+          <ion-radio value="padre"></ion-radio>
+        </ion-item>
+        <ion-item>
+          <ion-label>Madre</ion-label>
+          <ion-radio value="madre"></ion-radio>
+        </ion-item>
+        <ion-item>
+          <ion-label>Tutor legal</ion-label>
+          <ion-radio value="tutorLegal"></ion-radio>
+        </ion-item>
+      </ion-radio-group>
+
+      <ion-footer>
+        <ion-button (click)="registerTutor()">Registrarse</ion-button>
+      </ion-footer>
+    </ion-segment-content>
+
+    <ion-segment-content id="profesor">
+      <ion-input [(ngModel)]="email" type="email" fill="solid" label="Email" labelPlacement="floating" errorText="Email no permitido"></ion-input>
+      <ion-input [(ngModel)]="nombre" fill="solid" labelPlacement="floating" label="Nombre" placeholder="Tu nombre"></ion-input>
+      <ion-input [(ngModel)]="apellidos" fill="solid" labelPlacement="floating" label="Apellidos" placeholder="Apellidos"></ion-input>
+      <ion-input [(ngModel)]="password" type="password"  fill="solid" labelPlacement="floating" label="Contraseña" placeholder="contraseña"></ion-input>
+      <ion-row>
+        <ion-col size="9">
+          <ion-input [(ngModel)]="asignatura" type="text" fill="solid" labelPlacement="floating" label="Añadir asignatura" placeholder="Añadir asignatura"></ion-input>
+        </ion-col>
+        <ion-col size="3">
+          <ion-button (click)="anadirAsignatura()">+</ion-button>
+        </ion-col>
+      </ion-row>
+      
+      <ion-chip *ngFor="let asignatura of asignaturas">
+        <ion-label>{{ asignatura }}</ion-label>
+        <ion-icon (click)="eliminarAsignatura(asignatura)" name="close"></ion-icon>
+      </ion-chip>
+      <ion-row>
+        <ion-col size="9">
+          <ion-input [(ngModel)]="curso" type="text" fill="solid" labelPlacement="floating" label="Añadir curso" placeholder="Añadir curso"></ion-input>
+        </ion-col>
+        <ion-col size="3">
+          <ion-button (click)="anadirCurso()">+</ion-button>
+        </ion-col>
+      </ion-row>
+      
+      <ion-chip *ngFor="let curso of cursos">
+        <ion-label>{{ curso }}</ion-label>
+        <ion-icon (click)="eliminarCurso(curso)" name="close"></ion-icon>
+      </ion-chip>
+
+
+      <ion-footer>
+        <ion-button (click)="registerProfesor()">Registrarse</ion-button>
+        <ion-icon id="info" size="large" name="information-circle-outline"></ion-icon>
+        <ion-alert
+  trigger="info"
+  header="No hay que apresurarse"
+  message="Tanto las asignaturas como los cursos se podrán añadir y gestionar posteriormente. Si aún no lo tienes claro, pon 1 curso  y 0 asignaturas como mínimo."
+  [buttons]="alertButtons"
+></ion-alert>
+      </ion-footer>
+    </ion-segment-content>
+  </ion-segment-view>
+  
+</ion-content>
