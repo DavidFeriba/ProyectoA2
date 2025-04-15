@@ -2,6 +2,11 @@
 <ion-content [fullscreen]="true">
   <ion-toolbar>
     <ion-title size="large">Profesorado</ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="rgb(14 116 144)" (click)="cerrarSesion()">
+        <ion-icon slot="icon-only" name="exit-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
     <ion-header [translucent]="true">
       <ion-toolbar>
         <ion-datetime  presentation="date" value={{today}} [highlightedDates]="highlightedDates"></ion-datetime>

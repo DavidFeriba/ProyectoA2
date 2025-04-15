@@ -418,6 +418,105 @@ if(tutorCorreo.vinculado_id == null){
     }
     return data
   }
+  async obtenerFechasConTareas(): Promise<string[]> {
+    const { data, error } = await this.supabase
+      .from('tareas')
+      .select('f_limite');
+  
+    if (error) {
+      console.error('Error al obtener fechas con tareas:', error);
+      return [];
+    }
+  
+    // Filtra y devuelve solo las fechas únicas en formato string
+    const fechas = data.map((t: { f_limite: string }) => t.f_limite);
+    return Array.from(new Set(fechas));
+  }
+  async obtenerTareasPorFechaYCurso(fecha: string, curso: string): Promise<any[]> {
+    const { data, error } = await this.supabase
+      .from('tareas')
+      .select('*')
+      .eq('f_limite', fecha)
+      .eq('curso', curso);
+  
+    if (error) {
+      console.error('Error al obtener tareas:', error);
+      return [];
+    }
+  
+    return data;
+  }
+  async obtenerAlumno(idAlumno: string): Promise<any | null> {
+    const { data, error } = await this.supabase
+      .from('alumnos')
+      .select('*')
+      .eq('id', idAlumno)
+      .single();
+  
+    if (error) {
+      console.error('Error al obtener alumno:', error);
+      return null;
+    }
+  
+    return data;
+  }
+  async marcarTareaCompletada(alumnoId: string, tareaId: string) {
+    const { data, error } = await this.supabase
+      .from('tareas_completadas')
+      .upsert([{
+        alumno_id: alumnoId,
+        tarea_id: tareaId,
+        completada: true,
+        fecha_completada: new Date().toISOString(), // Fecha de cuando se marca como completada
+      }]);
+  
+    if (error) {
+      console.error('Error al marcar tarea como completada:', error);
+    }
+  
+    return data;
+  }
+  async marcarTareaIncompleta(alumnoId: string, tareaId: string) {
+    const { data, error } = await this.supabase
+      .from('tareas_completadas')
+      .upsert([{
+        alumno_id: alumnoId,
+        tarea_id: tareaId,
+        completada: false,
+        fecha_completada: null, // Borramos la fecha cuando se marca como incompleta
+      }]);
+  
+    if (error) {
+      console.error('Error al marcar tarea como incompleta:', error);
+    }
+  
+    return data;
+  }
+  async obtenerTareasConEstado(alumno_id: string): Promise<any[]> {
+    const { data, error } = await this.supabase
+      .from('tareas_completadas')
+      .select('tarea_id, completada')
+      .eq('alumno_id', alumno_id); // Asegúrate de filtrar por alumno
+  
+    if (error) {
+      console.error('Error al obtener el estado de las tareas:', error);
+      return [];
+    }
+  
+    return data;
+  }
+  async actualizarEstadoTarea(alumnoId: string, tareaId: string, estado: boolean) {
+    const { data, error } = await this.supabase
+      .from('tareas_completadas')  // Tabla donde se guarda el estado completado
+      .upsert([
+        { alumno_id: alumnoId, tarea_id: tareaId, completada: estado, fecha_completada: new Date() }
+      ], { onConflict: 'alumno_id,tarea_id' })  // Usar una cadena separada por comas
+    if (error) {
+      console.error("Error al actualizar estado de tarea:", error);
+    }
+    return data;
+  }
+  
 
 
 

@@ -93,7 +93,7 @@ export class ProfesoradoPage implements OnInit {
     ];
 
 
-    constructor(private modalCtrl: ModalController, private supabase: SupabaseService,private router:ActivatedRoute, private router2:Router) {
+    constructor( private supabase: SupabaseService,private router:ActivatedRoute, private router2:Router) {
       this.today = new Date().toISOString().split("T")[0]; // Formato YYYY-MM-DD
      }
      closeModal(modal: IonModal) {
@@ -231,5 +231,10 @@ export class ProfesoradoPage implements OnInit {
     ];
     document.body.appendChild(alert);
     await alert.present();
+  }
+  cerrarSesion(){
+    this.alumnos=[]
+    this.supabase.cerrarSesion()
+    this.router2.navigate(['/home'])
   }
 }

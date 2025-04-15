@@ -2,8 +2,12 @@
   <ion-header [translucent]="true">
     <ion-toolbar>
       <ion-title size="large">Alumnos</ion-title>
+      <ion-buttons slot="end">
+        <ion-button color="rgb(14 116 144)" (click)="cerrarSesion()">
+          <ion-icon slot="icon-only" name="exit-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
     </ion-toolbar>
-
 
     <!-- Selector de vista -->
     <ion-toolbar>
@@ -17,31 +21,74 @@
       </ion-segment>
     </ion-toolbar>
 
-
     <!-- Vista mensual -->
     <ng-container *ngIf="vistaSeleccionada === 'mes'">
       <ion-toolbar>
         <ion-datetime
           presentation="date"
           [value]="today"
-          [highlightedDates]="highlightedDates">
+          [highlightedDates]="highlightedDates"
+          (ionChange)="alSeleccionarFecha($event)">
         </ion-datetime>
       </ion-toolbar>
+      <ion-list *ngIf="tareasDelDia.length > 0">
+        <ion-list-header>
+          <ion-label>Tareas para el {{ tareasDelDia[0]?.f_limite | date: 'EEEE d' }}</ion-label>
+        </ion-list-header>
+        <ion-item *ngFor="let tarea of tareasDelDia">
+          <ion-label>
+            <h2>{{ tarea.asignatura }}</h2>
+            <h2>{{ tarea.pagina }}</h2>
+            <h2>{{ tarea.actividades }}</h2>
+            <p>{{ tarea.anotacion }}</p>
+          </ion-label>
+          <!-- Checkbox agregado en la vista mensual -->
+          <ion-checkbox
+            slot="end"
+            [checked]="tarea.completada"
+            (ionChange)="toggleTareaCompletada(tarea)">
+          </ion-checkbox>
+        </ion-item>
+      </ion-list>
     </ng-container>
-
 
     <!-- Vista semanal -->
     <ng-container *ngIf="vistaSeleccionada === 'semana'">
       <ion-toolbar>
         <ion-grid>
           <ion-row>
-            <ion-col *ngFor="let dia of diasSemana">
+            <ion-col *ngFor="let dia of diasSemana" (click)="alSeleccionarDiaSemana(dia)" [ngClass]="{'seleccionado': dia.toISOString().split('T')[0] === diaSeleccionado}">
               <div>{{ dia | date: 'EEE dd/MM' }}</div>
-              <!-- Aquí podrías mostrar tareas del día -->
             </ion-col>
           </ion-row>
         </ion-grid>
+        <ion-list *ngIf="tareasDelDia.length > 0; else sinTareas">
+          <ion-list-header>
+            <ion-label>Tareas para el {{ tareasDelDia[0]?.fecha | date: 'EEEE d' }}</ion-label>
+          </ion-list-header>
+          <ion-item *ngFor="let tarea of tareasDelDia">
+            <ion-label>
+              <h2>{{ tarea.asignatura }}</h2>
+              <p>{{ tarea.pagina }}</p>
+              <p>{{ tarea.actividades }}</p>
+              <p>{{ tarea.anotacion }}</p>
+            </ion-label>
+            <ion-checkbox
+              slot="end"
+              [checked]="tarea.completada"
+              (ionChange)="toggleTareaCompletada(tarea)">
+            </ion-checkbox>
+          </ion-item>
+        </ion-list>
       </ion-toolbar>
     </ng-container>
+
+    <ng-template #sinTareas>
+      <ion-item *ngIf="diaSeleccionado">
+        <ion-label>
+          <p>No hay tareas para este día :)</p>
+        </ion-label>
+      </ion-item>
+    </ng-template>
   </ion-header>
 </ion-content>

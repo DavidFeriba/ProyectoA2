@@ -3,3 +3,8 @@ ion-datetime {
   max-width: 100% !important;
 
 }
+ion-col.seleccionado {
+  background-color: #cce5ff;
+  border-radius: 8px;
+  transition: background-color 0.3s;
+}

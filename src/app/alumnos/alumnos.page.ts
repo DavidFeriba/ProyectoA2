@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Route, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SupabaseService } from '../services/supabase.service';
-
 
 @Component({
   selector: 'app-alumnos',
@@ -10,45 +9,51 @@ import { SupabaseService } from '../services/supabase.service';
   standalone: false
 })
 export class AlumnosPage implements OnInit {
-  vistaSeleccionada:string ='semana'
-  today: string;
+  vistaSeleccionada: string = 'semana';
   diasSemana: Date[] = [];
-  id : string = ''
+  tareasDelDia: any[] = [];
+  today: string;
+  id: string = '';
+  highlightedDates: any[] = [];
+  alumno: any = null;
+  curso: string = '';
+  diaSeleccionado: string = '';
 
-
-  highlightedDates = [
-    {
-      date: '2025-03-05',
-      textColor: '#800080',
-      backgroundColor: '#ffc0cb',
-    },
-    {
-      date: '2023-01-10',
-      textColor: '#09721b',
-      backgroundColor: '#c8e5d0',
-    },
-    {
-      date: '2023-01-20',
-      textColor: 'var(--ion-color-secondary-contrast)',
-      backgroundColor: 'var(--ion-color-secondary)',
-    },
-    {
-      date: '2023-01-23',
-      textColor: 'rgb(68, 10, 184)',
-      backgroundColor: 'rgb(211, 200, 229)',
-    },
-  ];
-
-  constructor(private router:ActivatedRoute, private router2:Router, private supabase:SupabaseService) {
+  constructor(
+    private router: ActivatedRoute, 
+    private router2: Router, 
+    private supabase: SupabaseService
+  ) {
     this.today = new Date().toISOString().split("T")[0]; // Formato YYYY-MM-DD
     this.router.params.subscribe(params => {
       this.id = params['id'];
-    })
-   }
+    });
+  }
 
+  async ngOnInit() {
+    this.generarDiasSemana();
+    this.cargarFechasConTareas();
+    this.alumno = await this.supabase.obtenerAlumno(this.id);
+    if (this.alumno) {
+      this.curso = this.alumno.curso;
+      await this.cargarTareasDelDia(this.today);
+    }
+  }
 
-   ngOnInit() {
-    this.generarDiasSemana()
+  async cargarTareasDelDia(fecha: string) {
+    // Cargar las tareas para el día seleccionado
+    this.tareasDelDia = await this.supabase.obtenerTareasPorFechaYCurso(fecha, this.curso);
+    
+    // Obtener el estado de las tareas desde la base de datos
+    const tareasCompletadas = await this.supabase.obtenerTareasConEstado(this.id);
+    
+    // Sincronizar el estado de las tareas
+    this.tareasDelDia.forEach(tarea => {
+      const tareaCompletada = tareasCompletadas.find(tc => tc.tarea_id === tarea.id);
+      if (tareaCompletada) {
+        tarea.completada = tareaCompletada.completada;
+      }
+    });
   }
 
   generarDiasSemana() {
@@ -64,7 +69,45 @@ export class AlumnosPage implements OnInit {
       dia.setDate(lunes.getDate() + i);
       this.diasSemana.push(dia);
     }
+  }
 
+  async cargarFechasConTareas() {
+    const fechas = await this.supabase.obtenerFechasConTareas();
 
-}
+    this.highlightedDates = fechas.map(fecha => ({
+      date: fecha,
+      textColor: '#ffffff',
+      backgroundColor: '#007bff'
+    }));
+  }
+
+  async alSeleccionarFecha(event: any) {
+    const fechaSeleccionada = event.detail.value;
+    if (!this.curso) return;
+
+    // Cargar tareas para la fecha seleccionada
+    await this.cargarTareasDelDia(fechaSeleccionada);
+  }
+
+  async alSeleccionarDiaSemana(dia: Date) {
+    const fecha = dia.toISOString().split('T')[0]; // Formato YYYY-MM-DD
+    this.diaSeleccionado = fecha;
+    if (!this.curso) return;
+
+    // Cargar tareas para el día de la semana seleccionado
+    await this.cargarTareasDelDia(fecha);
+  }
+
+  async toggleTareaCompletada(tarea: any) {
+    const nuevoEstado = !tarea.completada; // Invertir el estado
+
+    // Actualizar la base de datos con el nuevo estado
+    await this.supabase.actualizarEstadoTarea(this.id, tarea.id, nuevoEstado);
+
+    // Actualizar el estado en el componente
+    tarea.completada = nuevoEstado;
+  }
+  cerrarSesion(){
+    this.router2.navigate(['/home'])
+  }
 }
