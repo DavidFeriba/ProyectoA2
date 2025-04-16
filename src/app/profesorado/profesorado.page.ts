@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IonModal, ModalController } from '@ionic/angular';
 import { Alumno } from 'src/models/alumno.interface';
@@ -18,11 +18,13 @@ export class ProfesoradoPage implements OnInit {
   profesor_id:string = ''
   asignaturas: string[]= []
   cursos: string[] = []
-  public alumnos:Alumno[] = [];
+  public alumnos:any[] = [];
+  public alumnosFiltrados: any[] = [];
   tareas:any[] = []
   public tareaAlertInputs: any[] = []
   asignaturaSeleccionada: string = ''
   cursoSeleccionado: string= ''
+
 
   public tareaAlertButtons = [
     {
@@ -237,4 +239,16 @@ export class ProfesoradoPage implements OnInit {
     this.supabase.cerrarSesion()
     this.router2.navigate(['/home'])
   }
+  @ViewChild('escogerAlumno', { static: false }) modalEscogerAlumno: any;
+
+abrirModalAlumno(curso: string) {
+  this.cursoSeleccionado = curso;
+  this.alumnosFiltrados = this.alumnos.filter(alumno => alumno.curso === curso);
+  this.modalEscogerAlumno.present();
+}
+comprobarTarea(alumno: any){
+  this.router2.navigate(['/revisar-tareas'], {
+    queryParams: { idAlumno: alumno.id, idProfesor: this.profesor_id } // o nombre, o lo que uses
+  });
+}
 }

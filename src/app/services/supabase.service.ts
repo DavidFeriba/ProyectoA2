@@ -516,6 +516,37 @@ if(tutorCorreo.vinculado_id == null){
     }
     return data;
   }
+  async subirFotoTarea(alumnoId: string, tareaId: string, estado: boolean, url:string) {
+    const { data, error } = await this.supabase
+      .from('tareas_completadas')  // Tabla donde se guarda el estado completado
+      .upsert([
+        { alumno_id: alumnoId, tarea_id: tareaId, completada: estado, fecha_completada: new Date(),foto: url  }
+      ], { onConflict: 'alumno_id,tarea_id' })  // Usar una cadena separada por comas
+    if (error) {
+      console.error("Error al actualizar estado de tarea:", error);
+    }
+    return data;
+  }
+  async obtenerDetallesTareasConFoto(alumnoId: string, profesorId: string) {
+    const { data, error } = await this.supabase
+      .from('tareas_completadas')
+      .select('foto,tareas(*)') // Seleccionamos la foto de tareas_completadas y los detalles de tareas
+      .eq('alumno_id', alumnoId)
+      .eq('profesor_id', profesorId)
+      .not('foto', 'is', null);  // Filtramos para obtener solo las tareas con foto
+  
+    if (error) {
+      console.error('Error:', error);
+      return [];
+    }
+  
+    // Retornamos tanto la foto como los detalles de las tareas
+    return data.map(item => ({
+      foto: item.foto,  // Propiedad de la tabla tareas_completadas
+      tarea: item.tareas // Propiedad de la tabla tareas
+    }));
+  }
+  
   
 
 

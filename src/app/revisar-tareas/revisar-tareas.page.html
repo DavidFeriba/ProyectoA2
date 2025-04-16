@@ -1,0 +1,28 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>revisar-tareas</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">revisar-tareas</ion-title>
+    </ion-toolbar>
+    <ion-list>
+      <ion-item *ngFor="let tarea of tareas">
+        <ion-avatar slot="start">
+          <ion-img [src]="tarea.foto"></ion-img>
+        </ion-avatar>
+        <ion-label>
+          <h2>{{ tarea.asignatura }}</h2>
+          <p>{{ tarea.pagina }}</p>
+          <p>{{ tarea.actividades }}</p>
+          
+        </ion-label>
+        <ion-button color="success" (click)="aceptarTarea(tarea)">Aceptar</ion-button>
+        <ion-button color="danger" (click)="rechazarTarea(tarea)">Rechazar</ion-button>
+      </ion-item>
+    </ion-list>
+  </ion-header>
+</ion-content>

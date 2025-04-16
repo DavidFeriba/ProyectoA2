@@ -42,7 +42,11 @@ const routes: Routes = [
   {
     path: 'profesorado-login',
     loadChildren: () => import('./profesorado-login/profesorado-login.module').then( m => m.ProfesoradoLoginPageModule)
+  },  {
+    path: 'revisar-tareas',
+    loadChildren: () => import('./revisar-tareas/revisar-tareas.module').then( m => m.RevisarTareasPageModule)
   },
+
  
 ];
 

@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SupabaseService } from '../services/supabase.service';
+import { IonModal } from '@ionic/angular';
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
+import { Directory, Filesystem } from '@capacitor/filesystem';
 
 @Component({
   selector: 'app-alumnos',
@@ -18,6 +21,8 @@ export class AlumnosPage implements OnInit {
   alumno: any = null;
   curso: string = '';
   diaSeleccionado: string = '';
+  logros: any[] = []
+  selectedPhoto: string = ''
 
   constructor(
     private router: ActivatedRoute, 
@@ -38,6 +43,12 @@ export class AlumnosPage implements OnInit {
       this.curso = this.alumno.curso;
       await this.cargarTareasDelDia(this.today);
     }
+    this.comprobarLogros()
+      
+    
+  }
+  comprobarLogros() {
+    console.log("LOGROS")
   }
 
   async cargarTareasDelDia(fecha: string) {
@@ -110,4 +121,67 @@ export class AlumnosPage implements OnInit {
   cerrarSesion(){
     this.router2.navigate(['/home'])
   }
+  closeModal(modal: IonModal) {
+      if (modal) {
+        modal.dismiss();
+      }
+    }
+  async abrirCamara(tarea: any){
+    const image = await Camera.getPhoto({
+      quality: 90,
+      allowEditing: false,
+      resultType: CameraResultType.Base64,
+      source: CameraSource.Photos
+    });
+    this.selectedPhoto = `data:image/jpeg;base64,${image.base64String}`;
+    if (this.selectedPhoto) {
+      // Si se ha seleccionado una foto, subimos la imagen
+      const filePath = await this.subirImagen(this.selectedPhoto);
+      if (filePath) {
+        this.selectedPhoto = `https://xihoqjtqwissymcnjrud.supabase.co/storage/v1/object/public/fotos/${filePath}`;
+        this.supabase.subirFotoTarea(this.id, tarea.id,true,this.selectedPhoto)
+      }
+
+    }
+
+  }
+  async subirImagen(base64String: string): Promise<string | null> {
+    const filePath = `assets/imgAlumnos/${Date.now()}.png`; // Nombre único basado en timestamp
+    const file = this.base64StringToFile(base64String, filePath);
+
+    const { data, error } = await this.supabase.subirArchivo('fotos', filePath, file);
+
+    if (error) {
+      console.error('Error subiendo la imagen:', error);
+      return null;
+    }
+
+    console.log('Imagen subida con éxito:', data);
+    return filePath; // Devuelve la ruta del archivo en el bucket
+  }
+  base64StringToFile(base64: string, filename: string): File {
+    // Elimina el prefijo 'data:image/jpeg;base64,' o cualquier otro tipo
+    const base64String = base64.split(',')[1];  // Extrae solo la parte Base64
+  
+    const byteCharacters = atob(base64String);
+    const byteArrays = [];
+    
+    for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+      const byteSlice = byteCharacters.slice(offset, offset + 512);
+      const byteNumbers = new Array(byteSlice.length);
+  
+      for (let i = 0; i < byteSlice.length; i++) {
+        byteNumbers[i] = byteSlice.charCodeAt(i);
+      }
+  
+      const byteArray = new Uint8Array(byteNumbers);
+      byteArrays.push(byteArray);
+    }
+  
+    return new File(byteArrays, filename, { type: 'image/png' }); // ✅ Asegurar el return
+  }
+    
+
+
+
 }
