@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SupabaseService } from '../services/supabase.service';
+import { ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-registrar',
@@ -19,18 +20,31 @@ export class RegistrarPage implements OnInit {
   curso:string = '';
   asignaturas:string[] = [];
   asignatura:string = ''
+  emailInvalidoTutor: boolean = false;
+  nombreInvalidoTutor: boolean = false;
+  apellidosInvalidoTutor: boolean = false;
+  passwordInvalidoTutor: boolean = false;
 
-  constructor(private router:ActivatedRoute, private supabaseService: SupabaseService) { }
+  constructor(private toastController: ToastController, private router:ActivatedRoute, private supabaseService: SupabaseService) { }
 
   ngOnInit() {
   }
 
-  registerTutor() { 
+  async registerTutor() {
+    this.emailInvalidoTutor = !this.email || !this.email.includes('@');
+    this.nombreInvalidoTutor = !this.nombre || this.nombre.trim().length < 2;
+    this.apellidosInvalidoTutor = !this.apellidos || this.apellidos.trim().length < 2;
+    this.passwordInvalidoTutor = !this.password || this.password.length < 6;
 
+
+    const hayErrores = this.emailInvalidoTutor || this.nombreInvalidoTutor || this.apellidosInvalidoTutor || this.passwordInvalidoTutor;
+    const isCorreoRepetido = await this.correoRepetido()
+    if (hayErrores || isCorreoRepetido) return;
     // Llamar a la función de registro con los valores del formulario
     this.supabaseService.registerTutor(this.email, this.password, this.rol,this.nombre,this.apellidos)
       .then(user => {
         console.log('Usuario registrado', user);
+        this.mostrarToast("Registrado como "+this.rol+ " correctamente","success")
         // Aquí puedes redirigir al usuario o mostrar un mensaje
       })
       .catch(error => {
@@ -52,7 +66,7 @@ export class RegistrarPage implements OnInit {
     if(this.asignaturas.length < 8){
       this.asignaturas.push(this.asignatura)
     }
-    
+
   }
   eliminarAsignatura(asignatura: string) {
     const i = this.asignaturas.indexOf(asignatura)
@@ -69,7 +83,28 @@ export class RegistrarPage implements OnInit {
   }
 
   debug(){
-    console.log(this.rol); 
+    console.log(this.rol);
+  }
+  async mostrarToast(mensaje: string, color: string) {
+    const toast = await this.toastController.create({
+      message: mensaje,
+      duration: 2000,
+      color: color,
+      position: 'bottom',
+    });
+    await toast.present();
+  }
+  async correoRepetido() {
+      // Llamamos a la función obtenerCorreos() que devuelve una promesa
+      const correos = await this.supabaseService.obtenerCorreos();
+
+      // Verificamos si el correo ya existe en el array
+      if (correos.includes(this.email)) {
+        this.mostrarToast("Este correo ya dispone de una cuenta activa", "danger")
+        return true
+      } else {
+        return false
+      }
   }
 
 

@@ -29,6 +29,33 @@ export class SupabaseService {
   cerrarSesion(){
     this.supabase.auth.signOut()
   }
+  async obtenerCorreos() {
+    const { data: correosTutores, error: errorTutores } = await this.supabase
+      .from('tutores')
+      .select('email');
+
+    if (errorTutores) {
+      console.error('Error al obtener correos de tutores', errorTutores);
+      return [];
+    }
+
+    const { data: correosProfesores, error: errorProfesores } = await this.supabase
+      .from('profesores')
+      .select('email');
+
+    if (errorProfesores) {
+      console.error('Error al obtener correos de profesores', errorProfesores);
+      return [];
+    }
+
+    // Extraer los correos de los objetos y combinarlos
+    const correosTutoresArray = correosTutores?.map(tutor => tutor.email) || [];
+    const correosProfesoresArray = correosProfesores?.map(profesor => profesor.email) || [];
+
+    // Unir los correos de ambas tablas
+    const todosLosCorreos = [...correosTutoresArray, ...correosProfesoresArray];
+    return todosLosCorreos;
+  }
 
   async loginTutor(email: string, password: string){
     const { data, error } = await this.supabase.auth.signInWithPassword({
@@ -422,12 +449,12 @@ if(tutorCorreo.vinculado_id == null){
     const { data, error } = await this.supabase
       .from('tareas')
       .select('f_limite');
-  
+
     if (error) {
       console.error('Error al obtener fechas con tareas:', error);
       return [];
     }
-  
+
     // Filtra y devuelve solo las fechas únicas en formato string
     const fechas = data.map((t: { f_limite: string }) => t.f_limite);
     return Array.from(new Set(fechas));
@@ -438,12 +465,12 @@ if(tutorCorreo.vinculado_id == null){
       .select('*')
       .eq('f_limite', fecha)
       .eq('curso', curso);
-  
+
     if (error) {
       console.error('Error al obtener tareas:', error);
       return [];
     }
-  
+
     return data;
   }
   async obtenerAlumno(idAlumno: string): Promise<any | null> {
@@ -452,12 +479,12 @@ if(tutorCorreo.vinculado_id == null){
       .select('*')
       .eq('id', idAlumno)
       .single();
-  
+
     if (error) {
       console.error('Error al obtener alumno:', error);
       return null;
     }
-  
+
     return data;
   }
   async marcarTareaCompletada(alumnoId: string, tareaId: string) {
@@ -469,11 +496,11 @@ if(tutorCorreo.vinculado_id == null){
         completada: true,
         fecha_completada: new Date().toISOString(), // Fecha de cuando se marca como completada
       }]);
-  
+
     if (error) {
       console.error('Error al marcar tarea como completada:', error);
     }
-  
+
     return data;
   }
   async marcarTareaIncompleta(alumnoId: string, tareaId: string) {
@@ -485,11 +512,11 @@ if(tutorCorreo.vinculado_id == null){
         completada: false,
         fecha_completada: null, // Borramos la fecha cuando se marca como incompleta
       }]);
-  
+
     if (error) {
       console.error('Error al marcar tarea como incompleta:', error);
     }
-  
+
     return data;
   }
   async obtenerTareasConEstado(alumno_id: string): Promise<any[]> {
@@ -497,12 +524,12 @@ if(tutorCorreo.vinculado_id == null){
       .from('tareas_completadas')
       .select('tarea_id, completada')
       .eq('alumno_id', alumno_id); // Asegúrate de filtrar por alumno
-  
+
     if (error) {
       console.error('Error al obtener el estado de las tareas:', error);
       return [];
     }
-  
+
     return data;
   }
   async actualizarEstadoTarea(alumnoId: string, tareaId: string, estado: boolean) {
@@ -534,20 +561,20 @@ if(tutorCorreo.vinculado_id == null){
       .eq('alumno_id', alumnoId)
       .eq('profesor_id', profesorId)
       .not('foto', 'is', null);  // Filtramos para obtener solo las tareas con foto
-  
+
     if (error) {
       console.error('Error:', error);
       return [];
     }
-  
+
     // Retornamos tanto la foto como los detalles de las tareas
     return data.map(item => ({
       foto: item.foto,  // Propiedad de la tabla tareas_completadas
       tarea: item.tareas // Propiedad de la tabla tareas
     }));
   }
-  
-  
+
+
 
 
 

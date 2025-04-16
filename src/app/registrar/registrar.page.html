@@ -16,10 +16,28 @@
 
   <ion-segment-view>
     <ion-segment-content id="tutor">
-      <ion-input [(ngModel)]="email" type="email" fill="solid" label="Email" labelPlacement="floating"  errorText="Email no permitido"></ion-input>
-      <ion-input [(ngModel)]="nombre"  fill="solid" labelPlacement="floating" label="Nombre" placeholder="Tu nombre"></ion-input>
-      <ion-input [(ngModel)]="apellidos" fill="solid" labelPlacement="floating" label="Apellidos" placeholder="Apellidos"></ion-input>
-      <ion-input [(ngModel)]="password" type="password"  fill="solid" labelPlacement="floating" label="Contraseña" placeholder="contraseña"></ion-input>
+      <ion-input
+  [(ngModel)]="email"type="email"fill="solid"label="Email"labelPlacement="floating"[color]="emailInvalidoTutor ? 'danger' : 'primary'"
+></ion-input>
+<ion-note *ngIf="emailInvalidoTutor" color="danger">Email no válido</ion-note>
+
+
+<ion-input
+  [(ngModel)]="nombre"fill="solid"label="Nombre"placeholder="Tu nombre"labelPlacement="floating"[color]="nombreInvalidoTutor ? 'danger' : 'primary'"
+></ion-input>
+<ion-note *ngIf="nombreInvalidoTutor" color="danger">El nombre es obligatorio</ion-note>
+
+<ion-input
+  [(ngModel)]="apellidos"fill="solid"label="Apellidos"placeholder="Apellidos"labelPlacement="floating"[color]="apellidosInvalidoTutor ? 'danger' : 'primary'"
+></ion-input>
+<ion-note *ngIf="apellidosInvalidoTutor" color="danger">Introduce tus apellidos</ion-note>
+
+
+<ion-input
+  [(ngModel)]="password" type="password" fill="solid" label="Contraseña" placeholder="Contraseña" labelPlacement="floating" [color]="passwordInvalidoTutor ? 'danger' : 'primary'"
+></ion-input>
+<ion-note *ngIf="passwordInvalidoTutor" color="danger">Mínimo 6 caracteres</ion-note>
+
       <ion-radio-group (click) =debug() [(ngModel)]="rol">
         <ion-item>
           <ion-label>Padre</ion-label>
@@ -53,7 +71,7 @@
           <ion-button (click)="anadirAsignatura()">+</ion-button>
         </ion-col>
       </ion-row>
-      
+
       <ion-chip *ngFor="let asignatura of asignaturas">
         <ion-label>{{ asignatura }}</ion-label>
         <ion-icon (click)="eliminarAsignatura(asignatura)" name="close"></ion-icon>
@@ -66,7 +84,7 @@
           <ion-button (click)="anadirCurso()">+</ion-button>
         </ion-col>
       </ion-row>
-      
+
       <ion-chip *ngFor="let curso of cursos">
         <ion-label>{{ curso }}</ion-label>
         <ion-icon (click)="eliminarCurso(curso)" name="close"></ion-icon>
@@ -85,5 +103,5 @@
       </ion-footer>
     </ion-segment-content>
   </ion-segment-view>
-  
+
 </ion-content>
