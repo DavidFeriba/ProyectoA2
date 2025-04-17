@@ -59,10 +59,15 @@
     </ion-segment-content>
 
     <ion-segment-content id="profesor">
-      <ion-input [(ngModel)]="email" type="email" fill="solid" label="Email" labelPlacement="floating" errorText="Email no permitido"></ion-input>
+      <ion-input [(ngModel)]="email" type="email" fill="solid" label="Email" labelPlacement="floating"></ion-input>
+      <ion-note *ngIf="emailInvalidoProfesor" color="danger">Email no válido</ion-note>
       <ion-input [(ngModel)]="nombre" fill="solid" labelPlacement="floating" label="Nombre" placeholder="Tu nombre"></ion-input>
+      <ion-note *ngIf="nombreInvalidoProfesor" color="danger">Nombre no válido</ion-note>
       <ion-input [(ngModel)]="apellidos" fill="solid" labelPlacement="floating" label="Apellidos" placeholder="Apellidos"></ion-input>
+      <ion-note *ngIf="apellidosInvalidoProfesor" color="danger">Apellidos no válidos</ion-note>
       <ion-input [(ngModel)]="password" type="password"  fill="solid" labelPlacement="floating" label="Contraseña" placeholder="contraseña"></ion-input>
+      <ion-note *ngIf="passwordInvalidoProfesor" color="danger">La contraseña debe tener más de 6 carácteres</ion-note>
+
       <ion-row>
         <ion-col size="9">
           <ion-input [(ngModel)]="asignatura" type="text" fill="solid" labelPlacement="floating" label="Añadir asignatura" placeholder="Añadir asignatura"></ion-input>
@@ -76,6 +81,8 @@
         <ion-label>{{ asignatura }}</ion-label>
         <ion-icon (click)="eliminarAsignatura(asignatura)" name="close"></ion-icon>
       </ion-chip>
+      <ion-note *ngIf="asignaturasInvalido" color="danger">Al menos 1 asignatura</ion-note>
+
       <ion-row>
         <ion-col size="9">
           <ion-input [(ngModel)]="curso" type="text" fill="solid" labelPlacement="floating" label="Añadir curso" placeholder="Añadir curso"></ion-input>
@@ -89,6 +96,8 @@
         <ion-label>{{ curso }}</ion-label>
         <ion-icon (click)="eliminarCurso(curso)" name="close"></ion-icon>
       </ion-chip>
+      <ion-note *ngIf="cursosInvalido" color="danger">Al menos 1 curso</ion-note>
+
 
 
       <ion-footer>
@@ -97,7 +106,7 @@
         <ion-alert
   trigger="info"
   header="No hay que apresurarse"
-  message="Tanto las asignaturas como los cursos se podrán añadir y gestionar posteriormente. Si aún no lo tienes claro, pon 1 curso  y 0 asignaturas como mínimo."
+  message="Tanto las asignaturas como los cursos se podrán añadir y gestionar posteriormente. Si aún no lo tienes claro, pon 1 curso  y 1 asignatura como mínimo."
   [buttons]="alertButtons"
 ></ion-alert>
       </ion-footer>

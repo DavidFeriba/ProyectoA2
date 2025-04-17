@@ -24,6 +24,12 @@ export class RegistrarPage implements OnInit {
   nombreInvalidoTutor: boolean = false;
   apellidosInvalidoTutor: boolean = false;
   passwordInvalidoTutor: boolean = false;
+  emailInvalidoProfesor: boolean = false;
+  nombreInvalidoProfesor: boolean = false;
+  apellidosInvalidoProfesor: boolean = false;
+  passwordInvalidoProfesor: boolean = false;
+  asignaturasInvalido: boolean = false;
+  cursosInvalido: boolean = false
 
   constructor(private toastController: ToastController, private router:ActivatedRoute, private supabaseService: SupabaseService) { }
 
@@ -37,7 +43,7 @@ export class RegistrarPage implements OnInit {
     this.passwordInvalidoTutor = !this.password || this.password.length < 6;
 
 
-    const hayErrores = this.emailInvalidoTutor || this.nombreInvalidoTutor || this.apellidosInvalidoTutor || this.passwordInvalidoTutor;
+    const hayErrores = this.emailInvalidoTutor || this.nombreInvalidoTutor || this.apellidosInvalidoTutor || this.passwordInvalidoTutor || this.asignaturasInvalido || this.cursosInvalido;
     const isCorreoRepetido = await this.correoRepetido()
     if (hayErrores || isCorreoRepetido) return;
     // Llamar a la función de registro con los valores del formulario
@@ -51,7 +57,17 @@ export class RegistrarPage implements OnInit {
         console.error('Error en el registro:', error);
       });
   }
-  registerProfesor() {
+  async registerProfesor() {
+    this.emailInvalidoProfesor = !this.email || !this.email.includes('@');
+    this.nombreInvalidoProfesor = !this.nombre || this.nombre.trim().length < 2;
+    this.apellidosInvalidoProfesor = !this.apellidos || this.apellidos.trim().length < 2;
+    this.passwordInvalidoProfesor = !this.password || this.password.length < 6;
+    this.asignaturasInvalido = this.asignaturas.length < 1
+    this.cursosInvalido = this.cursos.length < 1
+
+    const hayErrores = this.emailInvalidoProfesor || this.nombreInvalidoProfesor || this.apellidosInvalidoProfesor || this.passwordInvalidoProfesor;
+    const isCorreoRepetido = await this.correoRepetido()
+    if (hayErrores || isCorreoRepetido) return;
     // Llamar a la función de registro con los valores del formulario
     this.supabaseService.registerProfesor(this.email, this.password, this.asignaturas, this.cursos,this.nombre,this.apellidos)
       .then(user => {
