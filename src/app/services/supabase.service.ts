@@ -532,7 +532,9 @@ if(tutorCorreo.vinculado_id == null){
 
     return data;
   }
+
   async actualizarEstadoTarea(alumnoId: string, tareaId: string, estado: boolean) {
+
     const { data, error } = await this.supabase
       .from('tareas_completadas')  // Tabla donde se guarda el estado completado
       .upsert([
@@ -547,7 +549,7 @@ if(tutorCorreo.vinculado_id == null){
     const { data, error } = await this.supabase
       .from('tareas_completadas')  // Tabla donde se guarda el estado completado
       .upsert([
-        { alumno_id: alumnoId, tarea_id: tareaId, completada: estado, fecha_completada: new Date(),foto: url  }
+        { alumno_id: alumnoId, tarea_id: tareaId, completada: estado, fecha_completada: new Date(),foto: url, revisada: false  }
       ], { onConflict: 'alumno_id,tarea_id' })  // Usar una cadena separada por comas
     if (error) {
       console.error("Error al actualizar estado de tarea:", error);
@@ -557,26 +559,199 @@ if(tutorCorreo.vinculado_id == null){
   async obtenerDetallesTareasConFoto(alumnoId: string, profesorId: string) {
     const { data, error } = await this.supabase
       .from('tareas_completadas')
-      .select('foto,tareas(*)') // Seleccionamos la foto de tareas_completadas y los detalles de tareas
+      .select(`
+        id,
+        completada,
+        fecha_completada,
+        foto,
+        revisada,
+        tareas (
+          id,
+          asignatura,
+          pagina,
+          actividades,
+          anotacion,
+          id_profesor,
+          curso,
+          f_limite
+        )
+      `)
       .eq('alumno_id', alumnoId)
-      .eq('profesor_id', profesorId)
-      .not('foto', 'is', null);  // Filtramos para obtener solo las tareas con foto
+      .eq('completada', true)
+      .eq('revisada', false)
+      .filter('tareas.id_profesor', 'eq', profesorId);
 
     if (error) {
-      console.error('Error:', error);
+      console.error('Error al obtener tareas con foto:', error);
       return [];
     }
 
-    // Retornamos tanto la foto como los detalles de las tareas
-    return data.map(item => ({
-      foto: item.foto,  // Propiedad de la tabla tareas_completadas
-      tarea: item.tareas // Propiedad de la tabla tareas
-    }));
+    return data;
   }
+  async obtenerTareasTodas(profesorId: string, curso: string) {
+    const { data, error } = await this.supabase
+      .from('tareas_completadas')
+      .select(`
+        id,
+        alumno_id,
+        tarea_id,
+        completada,
+        fecha_completada,
+        foto,
+        revisada,
+        tareas (
+          id,
+          asignatura,
+          pagina,
+          actividades,
+          anotacion,
+          id_profesor,
+          curso,
+          f_limite
+        )
+      `)
+      .eq('completada', true)
+      .eq('revisada', false)
+      .filter('tareas.id_profesor', 'eq', profesorId)
+      .filter('tareas.curso', 'eq', curso);
+
+    return error ? [] : data;
+  }
+  async actualizarEstadoTareaCompletada(tareaId: number, alumnoId: number, completada: boolean) {
+    const { error } = await this.supabase
+      .from('tareas_completadas')
+      .update({
+        completada: completada,
+        fecha_completada: completada ? new Date().toISOString() : null,
+        revisada: true
+      })
+
+      .eq('tarea_id', tareaId)
+      .eq('alumno_id', alumnoId);
+
+      console.log(tareaId)
+      console.log (alumnoId)
+
+
+    if (error) throw error;
+  }
+  async comprobarLogros(alumno_id:string){
+    const { data: tareas, error: tareasError } = await this.supabase
+    .from('tareas_completadas')
+    .select('*')
+    .eq('alumno_id', alumno_id)
+    .eq('completada',true)
+    .eq ('revisada' , true)
+    if (tareasError){
+      console.error(tareasError);
+      return;
+    }
+    console.log("Resultado de tareas completadas:", tareas);
+
+    const {data:logrosConseguidos1, error: logrosConseguidosError1} = await this.supabase
+    .from('logros_alumnos')
+    .select('*')
+    .eq('alumno_id', alumno_id)
+    .eq('logro_id', 1)
+    const {data:logrosConseguidos2, error: logrosConseguidosError2} = await this.supabase
+    .from('logros_alumnos')
+    .select('*')
+    .eq('alumno_id', alumno_id)
+    .eq('logro_id', 1)
+    console.log("Condición:", (tareas?.length ?? 0) >= 1, "y", (logrosConseguidos1?.length ?? 0) === 0);
+    if ((tareas?.length ?? 0) >= 1 && (logrosConseguidos1?.length ?? 0) === 0) {
+      const { error: insertError } = await this.supabase
+        .from('logros_alumnos')
+        .insert([
+          { logro_id: 1, alumno_id: alumno_id }
+        ]);
+
+      if (insertError) {
+        console.error("Error al insertar logro:", insertError);
+        return;
+      }
+
+      console.log("¡Logro insertado con éxito!");
+    }
+    if ((tareas?.length ?? 0) >= 5 && (logrosConseguidos2?.length ?? 0) === 0) {
+      const { error: insertError } = await this.supabase
+        .from('logros_alumnos')
+        .insert([
+          { logro_id: 2, alumno_id: alumno_id }
+        ]);
+
+      if (insertError) {
+        console.error("Error al insertar logro:", insertError);
+        return;
+      }
+
+      console.log("¡Logro insertado con éxito!");
+    }
 
 
 
+  }
+  async obtenerLogros(alumno_id: string) {
+    const { data: logros_alumnos, error: logros_alumnosError } = await this.supabase
+      .from('logros_alumnos')
+      .select('*')
+      .eq('alumno_id', alumno_id);
+      console.log("logros_alumnos data:", logros_alumnos);
+      console.log("logros_alumnos error:", logros_alumnosError);
 
+    if (logros_alumnosError) {
+      console.error("Error al obtener logros_alumnos:", logros_alumnosError);
+      return;
+    }
 
+    if ((logros_alumnos?.length ?? 0) > 0) {
+      // Extraemos todos los logro_id en un array
+      const idsLogros = logros_alumnos.map(l => l.logro_id);
 
+      const { data: logros, error: logrosError } = await this.supabase
+        .from('logros')
+        .select('*')
+        .in('id', idsLogros); // Aquí hacemos el select de los logros por ID
+
+      if (logrosError) {
+        console.error("Error al obtener logros:", logrosError);
+        return;
+      }
+
+      console.log("Logros del alumno:", logros);
+      return logros;
+    }
+
+    // Si no tiene logros, devolvemos un array vacío
+    return [];
+  }
+  async crearAviso(idAlumno: string, idProfesor: string, mensaje: string, grado: number) {
+    const fecha = new Date().toISOString();
+
+    const { error } = await this.supabase
+      .from('avisos')
+      .insert([
+        {
+          id_alumno: idAlumno,
+          id_profesor: idProfesor,
+          fecha,
+          mensaje,
+          grado
+        }
+      ]);
+
+    if (error) {
+      console.error('Error al crear el aviso:', error.message);
+      throw error;
+    } else {
+      console.log('Aviso creado correctamente');
+    }
+  }
 }
+
+
+
+
+
+
+

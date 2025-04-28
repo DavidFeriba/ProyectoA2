@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { IonModal, ModalController } from '@ionic/angular';
 import { Alumno } from 'src/models/alumno.interface';
 import { SupabaseService } from '../services/supabase.service';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-profesorado',
@@ -95,7 +96,7 @@ export class ProfesoradoPage implements OnInit {
     ];
 
 
-    constructor( private supabase: SupabaseService,private router:ActivatedRoute, private router2:Router) {
+    constructor( private alertController: AlertController, private supabase: SupabaseService,private router:ActivatedRoute, private router2:Router) {
       this.today = new Date().toISOString().split("T")[0]; // Formato YYYY-MM-DD
      }
      closeModal(modal: IonModal) {
@@ -103,6 +104,90 @@ export class ProfesoradoPage implements OnInit {
         modal.dismiss();
       }
     }
+    async addAviso() {
+      const alertAlumnos = await this.alertController.create({
+        header: 'Selecciona un alumno',
+        inputs: this.alumnos.map((alumno, index) => ({
+          type: 'radio' as const,
+          label: `${alumno.nombre} ${alumno.apellidos}`,
+          value: alumno.id,
+          checked: index === 0
+        })),
+        buttons: [
+          {
+            text: 'Cancelar',
+            role: 'cancel'
+          },
+          {
+            text: 'Siguiente',
+            handler: (id_alumno) => {
+              this.preguntarAviso(id_alumno);
+            }
+          }
+        ]
+      });
+
+      await alertAlumnos.present();
+    }
+    async preguntarAviso(id_alumno: string) {
+      const alertAviso = await this.alertController.create({
+        header: 'Nuevo Aviso',
+        inputs: [
+          {
+            name: 'mensaje',
+            type: 'textarea',
+            placeholder: 'Escribe el mensaje'
+          },
+          {
+            name: 'grado',
+            type: 'radio',
+            label: 'Leve',
+            value: 0,
+            checked: true
+          },
+          {
+            name: 'grado',
+            type: 'radio',
+            label: 'Moderado',
+            value: 1
+          },
+          {
+            name: 'grado',
+            type: 'radio',
+            label: 'Grave',
+            value: 2
+          }
+        ],
+        buttons: [
+          {
+            text: 'Cancelar',
+            role: 'cancel'
+          },
+          {
+            text: 'Crear',
+            handler: (data) => {
+              this.supabase.crearAviso(
+                id_alumno,
+                this.profesor_id,
+                data.mensaje,
+                data.grado
+              ).then(() => {
+                // opcional: toast o recarga de lista
+              }).catch((error) => {
+                console.error('Error al crear aviso:', error);
+              });
+            }
+          }
+        ]
+      });
+
+      await alertAviso.present();
+    }
+
+
+
+
+
 
 
 
@@ -248,7 +333,14 @@ abrirModalAlumno(curso: string) {
 }
 comprobarTarea(alumno: any){
   this.router2.navigate(['/revisar-tareas'], {
-    queryParams: { idAlumno: alumno.id, idProfesor: this.profesor_id } // o nombre, o lo que uses
+    queryParams: { idAlumno: alumno.id, idProfesor: this.profesor_id }
+  });
+}
+verTareasDeTodos() {
+  this.router2.navigate(['/revisar-tareas'], {
+    queryParams: { idProfesor: this.profesor_id,
+      curso: this.cursoSeleccionado
+     }
   });
 }
 }

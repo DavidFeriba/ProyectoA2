@@ -25,8 +25,8 @@ export class AlumnosPage implements OnInit {
   selectedPhoto: string = ''
 
   constructor(
-    private router: ActivatedRoute, 
-    private router2: Router, 
+    private router: ActivatedRoute,
+    private router2: Router,
     private supabase: SupabaseService
   ) {
     this.today = new Date().toISOString().split("T")[0]; // Formato YYYY-MM-DD
@@ -43,21 +43,27 @@ export class AlumnosPage implements OnInit {
       this.curso = this.alumno.curso;
       await this.cargarTareasDelDia(this.today);
     }
-    this.comprobarLogros()
-      
-    
+    await this.comprobarLogros()
+    await this.obtenerLogros()
+    console.log("logros: ",this.logros)
+
+
+
   }
-  comprobarLogros() {
-    console.log("LOGROS")
+  async comprobarLogros() {
+      await this.supabase.comprobarLogros(this.id)
+  }
+  async obtenerLogros(){
+    this.logros = (await this.supabase.obtenerLogros(this.id)) ?? [];
   }
 
   async cargarTareasDelDia(fecha: string) {
     // Cargar las tareas para el día seleccionado
     this.tareasDelDia = await this.supabase.obtenerTareasPorFechaYCurso(fecha, this.curso);
-    
+
     // Obtener el estado de las tareas desde la base de datos
     const tareasCompletadas = await this.supabase.obtenerTareasConEstado(this.id);
-    
+
     // Sincronizar el estado de las tareas
     this.tareasDelDia.forEach(tarea => {
       const tareaCompletada = tareasCompletadas.find(tc => tc.tarea_id === tarea.id);
@@ -162,25 +168,25 @@ export class AlumnosPage implements OnInit {
   base64StringToFile(base64: string, filename: string): File {
     // Elimina el prefijo 'data:image/jpeg;base64,' o cualquier otro tipo
     const base64String = base64.split(',')[1];  // Extrae solo la parte Base64
-  
+
     const byteCharacters = atob(base64String);
     const byteArrays = [];
-    
+
     for (let offset = 0; offset < byteCharacters.length; offset += 512) {
       const byteSlice = byteCharacters.slice(offset, offset + 512);
       const byteNumbers = new Array(byteSlice.length);
-  
+
       for (let i = 0; i < byteSlice.length; i++) {
         byteNumbers[i] = byteSlice.charCodeAt(i);
       }
-  
+
       const byteArray = new Uint8Array(byteNumbers);
       byteArrays.push(byteArray);
     }
-  
+
     return new File(byteArrays, filename, { type: 'image/png' }); // ✅ Asegurar el return
   }
-    
+
 
 
 
