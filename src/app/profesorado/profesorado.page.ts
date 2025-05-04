@@ -325,6 +325,8 @@ export class ProfesoradoPage implements OnInit {
     this.router2.navigate(['/home'])
   }
   @ViewChild('escogerAlumno', { static: false }) modalEscogerAlumno: any;
+  @ViewChild('modalAnadirAviso', { static: false }) modalAnadirAviso?: IonModal;
+@ViewChild('modalAvisos', { static: false }) modalAvisos?: IonModal;
 
 abrirModalAlumno(curso: string) {
   this.cursoSeleccionado = curso;
@@ -342,5 +344,9 @@ verTareasDeTodos() {
       curso: this.cursoSeleccionado
      }
   });
+}
+async abrirModalAnadirAviso() {
+  await this.modalAvisos?.dismiss(); // Opcional: cierra el modal anterior si lo deseas
+  await this.modalAnadirAviso?.present();
 }
 }
