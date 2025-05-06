@@ -588,6 +588,28 @@ if(tutorCorreo.vinculado_id == null){
 
     return data;
   }
+  async obtenerDetallesTareasParaDatos(alumnoId: string) {
+    const { data, error } = await this.supabase
+      .from('tareas_completadas')
+      .select(`
+        id,
+        completada,
+        fecha_completada,
+        foto,
+        revisada,
+        tareas
+      `)
+      .eq('alumno_id', alumnoId)
+      .eq('completada', true)
+      .eq('revisada', true);
+
+    if (error) {
+      console.error('Error al obtener tareas con foto:', error);
+      return [];
+    }
+
+    return data;
+  }
   async obtenerTareasTodas(profesorId: string, curso: string) {
     const { data, error } = await this.supabase
       .from('tareas_completadas')
@@ -761,9 +783,9 @@ if(tutorCorreo.vinculado_id == null){
         )
       `)
       .eq('id_profesor', idProfesor);
-  
+
     if (error) throw error;
-  
+
     return data;
   }
   async borrarAviso(id: number) {
@@ -771,12 +793,12 @@ if(tutorCorreo.vinculado_id == null){
       .from('avisos')
       .delete()
       .eq('id', id);
-  
+
     if (error) {
       console.error('Error al borrar el aviso:', error);
       throw error;
     }
-  
+
     return data;
   }
 }
