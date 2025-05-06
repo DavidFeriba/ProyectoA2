@@ -734,9 +734,9 @@ if(tutorCorreo.vinculado_id == null){
         {
           id_alumno: idAlumno,
           id_profesor: idProfesor,
-          fecha,
-          mensaje,
-          grado
+          fecha: fecha,
+          mensaje: mensaje,
+          grado: grado
         }
       ]);
 
@@ -746,6 +746,38 @@ if(tutorCorreo.vinculado_id == null){
     } else {
       console.log('Aviso creado correctamente');
     }
+  }
+  async obtenerAvisos(idProfesor: string) {
+    const { data, error } = await this.supabase
+      .from('avisos')
+      .select(`
+        id,
+        grado,
+        mensaje,
+        fecha,
+        alumnos (
+          nombre,
+          apellidos
+        )
+      `)
+      .eq('id_profesor', idProfesor);
+  
+    if (error) throw error;
+  
+    return data;
+  }
+  async borrarAviso(id: number) {
+    const { data, error } = await this.supabase
+      .from('avisos')
+      .delete()
+      .eq('id', id);
+  
+    if (error) {
+      console.error('Error al borrar el aviso:', error);
+      throw error;
+    }
+  
+    return data;
   }
 }
 

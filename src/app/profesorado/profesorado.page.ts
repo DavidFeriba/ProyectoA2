@@ -15,6 +15,7 @@ export class ProfesoradoPage implements OnInit {
   message = 'This modal example uses the modalController to present and dismiss modals.';
 
   today: string;
+  avisos: any[] = []
   profesor_uid: string = '';
   profesor_id:string = ''
   asignaturas: string[]= []
@@ -198,6 +199,7 @@ export class ProfesoradoPage implements OnInit {
     const profesor = await this.supabase.getDatosProfesor();
 
     if (profesor) {
+      
       this.profesor_uid = profesor.uid;
       this.alumnos = await this.supabase.obtenerAlumnosDelProfesor(this.profesor_uid) || [];
       console.log(this.alumnos)
@@ -205,10 +207,19 @@ export class ProfesoradoPage implements OnInit {
       this.cursos = profesor.cursos || []
       this.profesor_id = profesor.id
       this.tareas = await this.supabase.getTareasProfesor()
+      this.cargarAvisos();
 
 
     } else {
       console.log("Adios");
+    }
+  }
+  async cargarAvisos() {
+    try {
+      this.avisos = await this.supabase.obtenerAvisos(this.profesor_id);
+      console.log('Avisos:', this.avisos);
+    } catch (error) {
+      console.error('Error al cargar los avisos:', error);
     }
   }
   addTarea(data: any){
@@ -324,6 +335,69 @@ export class ProfesoradoPage implements OnInit {
     this.supabase.cerrarSesion()
     this.router2.navigate(['/home'])
   }
+  async formularioAviso(alumno: any) {
+    const alertGrado = await this.alertController.create({
+      header: `Grado del aviso para ${alumno.nombre}`,
+      inputs: [
+        { name: 'gravedad', type: 'radio', label: 'Leve', value: '1', checked: true },
+        { type: 'radio', label: 'Intermedio', value: '2' },
+        { type: 'radio', label: 'Grave', value: '3' }
+      ],
+      buttons: [
+        { text: 'Cancelar', role: 'cancel' },
+        {
+          text: 'Siguiente',
+          handler: async (dataGrado) => {
+            const alertMensaje = await this.alertController.create({
+              header: 'Escribe el mensaje del aviso',
+              inputs: [
+                {
+                  type: 'text',
+                  name: 'mensaje',  // Cambié 'mensaje' a un nombre distinto
+                  placeholder: 'Escribe el mensaje aquí...',
+                  attributes: { maxlength: 255 }
+                }
+              ],
+              buttons: [
+                { text: 'Cancelar', role: 'cancel' },
+                {
+                  text: 'Enviar',
+                  handler: async (dataMensaje) => {
+                    try {
+                      // Convertir 'dataGrado' a número antes de pasarlo al servicio
+                      const gradoNumber = parseInt(dataGrado, 10); // Ahora es un número
+                      if (isNaN(gradoNumber)) {
+                        console.error('El grado seleccionado no es válido');
+                        return;
+                      }
+  
+                      await this.supabase.crearAviso(
+                        alumno.id,
+                        this.profesor_id,
+
+                        dataMensaje.mensaje,
+                        gradoNumber
+                      );
+                      console.log('Aviso creado correctamente');
+                      this.cargarAvisos();
+                    } catch (err) {
+                      console.error('Error al crear el aviso:', err);
+                    }
+                  }
+                }
+              ]
+            });
+  
+            await alertMensaje.present();
+          }
+        }
+      ]
+    });
+  
+    await alertGrado.present();
+  }
+  
+  
   @ViewChild('escogerAlumno', { static: false }) modalEscogerAlumno: any;
   @ViewChild('modalAnadirAviso', { static: false }) modalAnadirAviso?: IonModal;
 @ViewChild('modalAvisos', { static: false }) modalAvisos?: IonModal;
@@ -348,5 +422,13 @@ verTareasDeTodos() {
 async abrirModalAnadirAviso() {
   await this.modalAvisos?.dismiss(); // Opcional: cierra el modal anterior si lo deseas
   await this.modalAnadirAviso?.present();
+}
+async borrarAviso(idAviso: number) {
+  try {
+    await this.supabase.borrarAviso(idAviso);
+    this.cargarAvisos(); // vuelve a cargar los avisos desde Supabase
+  } catch (error) {
+    console.error('No se pudo borrar el aviso:', error);
+  }
 }
 }
