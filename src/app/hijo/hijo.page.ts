@@ -1,10 +1,7 @@
-import {  OnInit } from '@angular/core';
-import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
-
+import { Component, ViewChild, ElementRef, AfterViewInit, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { SupabaseClient } from '@supabase/supabase-js';
 import { SupabaseService } from '../services/supabase.service';
-import { Chart, registerables } from 'chart.js';
+import { Chart, ChartType, registerables } from 'chart.js';
 
 Chart.register(...registerables);
 
@@ -12,44 +9,58 @@ Chart.register(...registerables);
   selector: 'app-hijo',
   templateUrl: './hijo.page.html',
   styleUrls: ['./hijo.page.scss'],
-  standalone : false
+  standalone: false,
 })
-export class HijoPage implements OnInit {
+export class HijoPage implements OnInit, AfterViewInit {
   @ViewChild('myChart') myChartRef!: ElementRef;
   id: string = '';
   alumno: any = null;
+  chart: any; // Guardar la instancia del gráfico
+  chartType: ChartType = 'line'; // Tipo de gráfico inicial
+
   constructor(private route: ActivatedRoute, private supabase: SupabaseService) {
     this.route.params.subscribe(params => {
       this.id = params['id'];
-    })
-   }
+    });
+  }
 
   async ngOnInit() {
     this.alumno = await this.supabase.obtenerAlumno(this.id);
   }
-  ngAfterViewInit() {
-    console.log(this.myChartRef);
-    const ctx = this.myChartRef.nativeElement.getContext('2d');
 
-    new Chart(ctx, {
-      type: 'line', // o 'line', 'pie', etc.
+  ngAfterViewInit() {
+    this.crearGrafico(); // Inicializar el gráfico cuando la vista esté lista
+  }
+
+  // Función para crear el gráfico
+  async crearGrafico() {
+    const ctx = this.myChartRef.nativeElement.getContext('2d');
+    const tareasPorDia = await this.supabase.obtenerTareasPorDia(this.id);
+
+    this.chart = new Chart(ctx, {
+      type: this.chartType, // Usar el tipo de gráfico actual
       data: {
-        labels: ['Lunes', 'Martes', 'Miercoles','Jueves','Viernes','Sabado','Domingo'],
+        labels: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'],
         datasets: [
           {
             label: 'Deberes entregados X día',
-            data: [12, 19, 3],
-            backgroundColor: ['#f44336', '#2196f3', '#ffeb3b'],
-            borderColor: ['#c62828', '#1565c0', '#fbc02d'],
+            data: tareasPorDia,
+            backgroundColor: ['#f44336', '#2196f3', '#ffeb3b', '#8bc34a', '#ff5722', '#673ab7', '#c2185b'],
+            borderColor: ['#c62828', '#1565c0', '#fbc02d', '#388e3c', '#e64a19', '#5e35b1', '#ad1457'],
             borderWidth: 1,
           },
         ],
       },
       options: {
         responsive: true,
-        maintainAspectRatio: false,
+        maintainAspectRatio: true,
       },
     });
   }
 
+  // Función para cambiar el tipo de gráfico
+  cambiarTipoGrafico() {
+    this.chart.destroy(); // Eliminar el gráfico actual
+    this.crearGrafico(); // Crear un nuevo gráfico con el nuevo tipo
+  }
 }

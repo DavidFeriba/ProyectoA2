@@ -588,28 +588,41 @@ if(tutorCorreo.vinculado_id == null){
 
     return data;
   }
-  async obtenerDetallesTareasParaDatos(alumnoId: string) {
+  async obtenerTareasPorDia(alumnoId: string) {
     const { data, error } = await this.supabase
       .from('tareas_completadas')
       .select(`
         id,
         completada,
         fecha_completada,
-        foto,
         revisada,
-        tareas
+        tarea_id
       `)
       .eq('alumno_id', alumnoId)
       .eq('completada', true)
       .eq('revisada', true);
-
+  
     if (error) {
-      console.error('Error al obtener tareas con foto:', error);
+      console.error('Error al obtener tareas por dia:', error);
       return [];
     }
-
-    return data;
+  
+    // Arreglo para contar las tareas completadas por día de la semana (Domingo = 0, Lunes = 1, ..., Sábado = 6)
+    const tareasPorDia: number[] = [0, 0, 0, 0, 0, 0, 0]; // [Domingo, Lunes, Martes, Miércoles, Jueves, Viernes, Sábado]
+  
+    // Iterar sobre las tareas para contar cuántas se completaron en cada día
+    data.forEach((tarea: any) => {
+      const fecha = new Date(tarea.fecha_completada);
+      const diaSemana = fecha.getDay(); // Obtener el índice del día de la semana (0=Domingo, 1=Lunes, ..., 6=Sábado)
+  
+      // No es necesario ajustar el índice, ya que getDay() ya devuelve Domingo=0, Lunes=1, ..., Sábado=6
+      tareasPorDia[diaSemana]++;
+    });
+  
+    // Retornar los datos procesados
+    return tareasPorDia;
   }
+  
   async obtenerTareasTodas(profesorId: string, curso: string) {
     const { data, error } = await this.supabase
       .from('tareas_completadas')

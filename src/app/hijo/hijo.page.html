@@ -1,5 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
+    <!-- Botón de retroceso -->
+    <ion-back-button slot = 'start' text = '' defaultHref="/home"></ion-back-button>
     <ion-title>hijo</ion-title>
   </ion-toolbar>
 </ion-header>
@@ -8,10 +10,32 @@
   <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large">{{alumno?.nombre}}</ion-title>
-
     </ion-toolbar>
   </ion-header>
+
   <ion-content>
+    <!-- Imagen circular -->
+    <div class="photo-container">
+      <img [src]="alumno?.foto" alt="Foto del alumno" class="profile-image" />
+    </div>
+
+    <!-- Canvas para la gráfica -->
     <canvas #myChart width="400" height="400"></canvas>
+
+    <!-- Selector de tipo de gráfico -->
+    <ion-segment [(ngModel)]="chartType" (ionChange)="cambiarTipoGrafico()">
+      <ion-segment-button value="line">
+        Línea
+      </ion-segment-button>
+      <ion-segment-button value="bar">
+        Barras
+      </ion-segment-button>
+      <ion-segment-button value="pie">
+        Pastel
+      </ion-segment-button>
+      <ion-segment-button value="radar">
+        Radar
+      </ion-segment-button>
+    </ion-segment>
   </ion-content>
 </ion-content>
