@@ -4,6 +4,8 @@
   <ion-header>
     <ion-toolbar>
       <ion-title size="large">Profesorado</ion-title>
+      <ion-back-button slot = 'start' text = '' defaultHref="/home"></ion-back-button>
+
       <ion-buttons slot="end">
         <ion-button color="rgb(14 116 144)" (click)="cerrarSesion()">
           <ion-icon slot="icon-only" name="exit-outline"></ion-icon>
@@ -12,9 +14,8 @@
     </ion-toolbar>
 
     <!-- Toolbar con el calendario (separado del anterior) -->
-    <ion-toolbar>
-      <ion-datetime presentation="date" [value]="today" [highlightedDates]="highlightedDates"></ion-datetime>
-    </ion-toolbar>
+    <ion-datetime presentation="date" [value]="today" [highlightedDates]="highlightedDates"></ion-datetime>
+
   </ion-header>
   <ion-list>
     <ion-item id="modal2">
@@ -133,7 +134,7 @@
             <ion-button color="light" (click)="closeModal(modalAvisos)">Close</ion-button>
           </ion-buttons>
         </ion-toolbar>
-  
+
         <ion-list>
           <ion-item-sliding *ngFor="let aviso of avisos">
             <ion-item>
@@ -150,7 +151,7 @@
                   'alert'">
               </ion-icon>
             </ion-item>
-        
+
             <ion-item-options side="end">
               <ion-item-option color="danger" (click)="borrarAviso(aviso.id)">
                 <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
@@ -158,7 +159,7 @@
             </ion-item-options>
           </ion-item-sliding>
         </ion-list>
-  
+
       </ion-content>
     </ng-template>
   </ion-modal>
@@ -185,7 +186,7 @@
           </ion-item>
 
         </ion-list>
-        
+
       </ion-content>
     </ng-template>
   </ion-modal>

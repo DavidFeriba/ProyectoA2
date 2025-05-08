@@ -1,6 +1,8 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>Iniciar sesión</ion-title>
+    <ion-back-button slot = 'start' text = '' defaultHref="/home"></ion-back-button>
+
   </ion-toolbar>
 </ion-header>
 
@@ -10,5 +12,8 @@
     <ion-input [(ngModel)]="password" type="password" name="password" placeholder="Contraseña" required></ion-input>
 
     <ion-button expand="full" type="submit">Iniciar sesión</ion-button>
+    <ion-text color="danger" *ngIf="errorLogin">
+      <p class="ion-padding-start">Correo o contraseña incorrectos</p>
+    </ion-text>
   </form>
 </ion-content>

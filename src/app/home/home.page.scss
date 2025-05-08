@@ -7,7 +7,40 @@
   top: 50%;
   transform: translateY(-50%);
 }
+.card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+}
 
+ion-card {
+  margin: 20px;
+  border-radius: 90px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  transition: transform 0.2s ease;
+}
+ion-card-title {
+  color: white !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+ion-card-title ion-icon {
+  color: white !important;
+  margin-bottom: 8px;
+}
+
+ion-card:hover {
+  transform: scale(1.03);
+  cursor: pointer;
+}
 #container strong {
   font-size: 20px;
   line-height: 26px;
@@ -36,7 +69,7 @@ ion-col:first-child {
 
 //Estilo 2
 
-  
+
 ion-toolbar {
   --background: #0597F2; /* Verde agua para el toolbar */
   --color: white; /* Color del texto en el toolbar */

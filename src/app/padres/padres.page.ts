@@ -23,7 +23,7 @@ export class PadresPage implements OnInit {
   tutor_uid:string = ''
   tutor_vinculado_id: number= -1
 
-  
+
 
   public alumnos: Alumno[] = [];
   public selectedPhoto: string = ''; // Almacena la imagen seleccionada
@@ -31,28 +31,29 @@ export class PadresPage implements OnInit {
 
   constructor(private toastController: ToastController,private supabaseService: SupabaseService,private alertController: AlertController, private router:Router) {
   }
-  
- 
-  
+
+
+
   async ngOnInit() {
-    
+
     const tutor = await this.supabaseService.getDatosTutor();
 
     if (tutor) {
       this.tutor_uid = tutor.uid;
+      this.tutor_nombre = tutor.nombre;
       this.tutor_vinculado_id = tutor.vinculado_id;
       console.log(this.tutor_uid);
       const alumnosPropios = await this.supabaseService.obtenerAlumnosDelTutor(this.tutor_uid) || [];
       const alumnosVinculado = await this.supabaseService.obtenerAlumnosDelTutor(this.tutor_vinculado_id);
       this.alumnos = alumnosPropios.concat(alumnosVinculado)
-      
+
 
 
     } else {
       console.log("Adios");
     }
-  
-    
+
+
   }
 
   async subirImagen(base64String: string): Promise<string | null> {
@@ -73,28 +74,28 @@ export class PadresPage implements OnInit {
   base64StringToFile(base64: string, filename: string): File {
     // Elimina el prefijo 'data:image/jpeg;base64,' o cualquier otro tipo
     const base64String = base64.split(',')[1];  // Extrae solo la parte Base64
-  
+
     const byteCharacters = atob(base64String);
     const byteArrays = [];
-    
+
     for (let offset = 0; offset < byteCharacters.length; offset += 512) {
       const byteSlice = byteCharacters.slice(offset, offset + 512);
       const byteNumbers = new Array(byteSlice.length);
-  
+
       for (let i = 0; i < byteSlice.length; i++) {
         byteNumbers[i] = byteSlice.charCodeAt(i);
       }
-  
+
       const byteArray = new Uint8Array(byteNumbers);
       byteArrays.push(byteArray);
     }
-  
+
     return new File(byteArrays, filename, { type: 'image/png' }); // ✅ Asegurar el return
   }
   async vincularAlert(){
     if (this.tutor_vinculado_id <= 0) {
       const alert = await this.alertController.create({
-        header: 'Vinculación de otro usuario para compartir los hijos', 
+        header: 'Vinculación de otro usuario para compartir los hijos',
         inputs: [
           {
             name: "correo",
@@ -102,14 +103,14 @@ export class PadresPage implements OnInit {
             placeholder: 'Correo electrónico de tu compañero',
           },
         ],
-        
+
         buttons: [
           {
             text: 'Cancelar',
             role: 'cancel',
           },
           {
-            
+
             text:'Enviar petición',
             handler: async (data) => {
               const correo: string = data.correo
@@ -124,19 +125,19 @@ export class PadresPage implements OnInit {
           },
         ]
       }
-      
-    )    
+
+    )
     await alert.present()
     }else{
       const alert = await this.alertController.create({
-        header: 'Ya tienes a tu compañero vinculado', 
+        header: 'Ya tienes a tu compañero vinculado',
         buttons: [
           {
             text: 'Cancelar',
             role: 'cancel',
           },
           {
-            
+
             text:'Eliminar vínculo',
             handler: () => {
               this.supabaseService.eliminarVinculo(this.tutor_uid,this.tutor_vinculado_id)
@@ -145,26 +146,26 @@ export class PadresPage implements OnInit {
           },
         ]
       }
-    )    
+    )
     await alert.present()
     }
-    
- 
-   
-  
+
+
+
+
 
   }
 
 
 
-  
+
 
   async anadirAlert(initialData: any={}) {
     const imageSrc = this.selectedPhoto || '../assets/default-avatar.png';
   const imageHtml = `<img src="${imageSrc}" alt="Foto" style="max-width: 100%; height: auto; margin: 10px auto; display: block; border-radius: 5px;" />`;
     const alert = await this.alertController.create({
       header: 'Ingrese la información del hijo',
-      message: imageHtml, 
+      message: imageHtml,
       inputs: [
         {
           name: "nombre",
@@ -181,7 +182,7 @@ export class PadresPage implements OnInit {
         {
           name: "curso",
           type: 'text',
-          placeholder: 'Curso',
+          placeholder: 'Curso: 1B, 2A...',
           min: 1,
           max: 6,
           value: initialData.curso ||''
@@ -217,7 +218,7 @@ export class PadresPage implements OnInit {
             ...data,
             foto: this.selectedPhoto || 'assets/default-avatar.png'
           });
-        
+
           }
         },
         {
@@ -228,7 +229,7 @@ export class PadresPage implements OnInit {
               apellidos: alert.inputs[1].value,
               curso: alert.inputs[2].value
             };
-            
+
             // Selecciona la foto sin cerrar el alert
             const image = await Camera.getPhoto({
               quality: 90,
@@ -236,24 +237,24 @@ export class PadresPage implements OnInit {
               resultType: CameraResultType.Base64,
               source: CameraSource.Photos
             });
-            
+
             // Actualiza la foto
             this.selectedPhoto = `data:image/jpeg;base64,${image.base64String}`;
             const alertElement = await this.alertController.getTop();
           if (alertElement) {
             const shadowRoot = alertElement.shadowRoot || alertElement;
             const imgElement = shadowRoot.querySelector('img');
-            
+
             if (imgElement instanceof HTMLImageElement) {
               imgElement.src = this.selectedPhoto;
             }
           }
-       
-            
+
+
             alert.inputs[0].value = currentValues.nombre;
             alert.inputs[1].value = currentValues.apellidos;
             alert.inputs[2].value = currentValues.curso;
-            
+
             return false;
           }
         }
@@ -264,7 +265,10 @@ export class PadresPage implements OnInit {
   }
 
   async addAlumno(data: any) {
-      const pin = Math.floor(10000 + Math.random() * 90000);
+    let pin :number = 0
+    do {
+      pin = Math.floor(10000 + Math.random() * 90000);
+    } while (!this.supabaseService.pinExiste(pin));
       console.log(pin);
       console.log("DATOS: ")
       const nombre: string = data.nombre
@@ -273,22 +277,24 @@ export class PadresPage implements OnInit {
       const curso : string = data.curso
       try {
         // Primero obtenemos el tutor
-        const tutor = await this.supabaseService.getDatosTutor(); 
-    
+        const tutor = await this.supabaseService.getDatosTutor();
+
         // Verificar que el tutor existe
         if (!tutor) {
           throw new Error('Tutor no encontrado');
         }
-    
+
         // Pasamos el id del tutor a la función addAlumno
         await this.supabaseService.addAlumno(nombre, apellidos, curso, foto, tutor.id,pin);
-    
+
         console.log('Alumno registrado con éxito');
       } catch (error) {
         console.error('Error al registrar el alumno:');
       }
+      this.ngOnInit()
 
-  }async yaVinculadoToast() {
+  }
+  async yaVinculadoToast() {
     const toast = await this.toastController.create({
       message: 'Este tutor ya está vinculado',
       duration: 3000,
@@ -303,7 +309,7 @@ export class PadresPage implements OnInit {
     this.supabaseService.cerrarSesion()
     this.router.navigate(['/home'])
   }
-  
- 
+
+
 
 }

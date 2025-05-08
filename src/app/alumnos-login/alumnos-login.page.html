@@ -9,5 +9,8 @@
     <ion-input [(ngModel)]="pin" type="password" name="pin" placeholder="PIN" required></ion-input>
 
     <ion-button expand="full" type="submit">Iniciar sesión</ion-button>
+    <ion-text color="danger" *ngIf="errorLogin">
+      <p class="ion-padding-start">Pin incorrecto</p>
+    </ion-text>
   </form>
 </ion-content>

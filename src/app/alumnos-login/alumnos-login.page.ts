@@ -9,14 +9,20 @@ import { ActivatedRoute, Router } from '@angular/router';
   standalone : false
 })
 export class AlumnosLoginPage implements OnInit {
-  pin: number = 0
-
+  pin!: number;
+  errorLogin: boolean = false;
   constructor(private router:ActivatedRoute, private router2:Router, private supabase:SupabaseService) { }
   async login() {
+    try{
     const alumno = await this.supabase.confirmarPin(this.pin)
     if (alumno){
       this.router2.navigate(['/alumnos', alumno.id])
+    }else{
+      this.errorLogin = true
     }
+  }catch (error){
+    this.errorLogin = true
+  }
 }
   ngOnInit() {
   }
