@@ -461,10 +461,11 @@ if(tutorCorreo.vinculado_id == null){
     }
     return data
   }
-  async obtenerFechasConTareas(): Promise<string[]> {
+  async obtenerFechasConTareas(curso:string): Promise<string[]> {
     const { data, error } = await this.supabase
       .from('tareas')
-      .select('f_limite');
+      .select('f_limite')
+      .eq('curso', curso.trim())
 
     if (error) {
       console.error('Error al obtener fechas con tareas:', error);
@@ -475,12 +476,14 @@ if(tutorCorreo.vinculado_id == null){
     const fechas = data.map((t: { f_limite: string }) => t.f_limite);
     return Array.from(new Set(fechas));
   }
-  async obtenerTareasPorFechaYCurso(fecha: string, curso: string): Promise<any[]> {
+  async obtenerTareasPorFechaYCurso(fecha: string, curso: string) {
+    console.log("Buscando tareas para:", curso, fecha);
+
     const { data, error } = await this.supabase
       .from('tareas')
       .select('*')
-      .eq('f_limite', fecha)
-      .eq('curso', curso);
+      .eq('curso', curso)
+      .filter('f_limite', 'eq', fecha); // Comparación solo por fecha exacta
 
     if (error) {
       console.error('Error al obtener tareas:', error);
@@ -489,6 +492,7 @@ if(tutorCorreo.vinculado_id == null){
 
     return data;
   }
+
   async obtenerAlumno(idAlumno: string): Promise<any | null> {
     const { data, error } = await this.supabase
       .from('alumnos')

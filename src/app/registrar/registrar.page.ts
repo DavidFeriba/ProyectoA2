@@ -89,13 +89,22 @@ export class RegistrarPage implements OnInit {
     this.asignaturas.splice(i, 1);
   }
   anadirCurso(){
-    if(this.cursos.length < 8){
+    if (!this.comprobarCurso(this.curso)) {
+      this.mostrarToast("Formato de curso inválido. Usa formatos como '1A', '2B'...", "danger");
+      return;
+    }
+    if(this.cursos.length < 8 && !this.cursos.includes(this.curso)){
       this.cursos.push(this.curso)
+      this.curso = '';
     }
   }
   eliminarCurso(curso: string) {
     const i = this.asignaturas.indexOf(curso)
     this.cursos.splice(i, 1);
+  }
+  comprobarCurso(curso: string): boolean {
+    const regex = /^[1-6][A-B]$/; // Acepta 1A, 1B, 2A, ..., 6B
+    return regex.test(curso);
   }
 
   debug(){

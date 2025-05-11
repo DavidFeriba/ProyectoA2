@@ -37,12 +37,13 @@ export class AlumnosPage implements OnInit {
 
   async ngOnInit() {
     this.generarDiasSemana();
-    this.cargarFechasConTareas();
+
     this.alumno = await this.supabase.obtenerAlumno(this.id);
     if (this.alumno) {
       this.curso = this.alumno.curso;
       await this.cargarTareasDelDia(this.today);
     }
+    this.cargarFechasConTareas();
     await this.comprobarLogros()
     await this.obtenerLogros()
     console.log("logros: ",this.logros)
@@ -89,7 +90,7 @@ export class AlumnosPage implements OnInit {
   }
 
   async cargarFechasConTareas() {
-    const fechas = await this.supabase.obtenerFechasConTareas();
+    const fechas = await this.supabase.obtenerFechasConTareas(this.curso);
 
     this.highlightedDates = fechas.map(fecha => ({
       date: fecha,
@@ -104,6 +105,9 @@ export class AlumnosPage implements OnInit {
 
     // Cargar tareas para la fecha seleccionada
     await this.cargarTareasDelDia(fechaSeleccionada);
+    this.diaSeleccionado = fechaSeleccionada;
+    console.log('Tareas obtenidas para el día', fechaSeleccionada, this.tareasDelDia);
+
   }
 
   async alSeleccionarDiaSemana(dia: Date) {
@@ -113,6 +117,7 @@ export class AlumnosPage implements OnInit {
 
     // Cargar tareas para el día de la semana seleccionado
     await this.cargarTareasDelDia(fecha);
+    console.log('Tareas obtenidas para el día', fecha, this.tareasDelDia);
   }
 
   async toggleTareaCompletada(tarea: any) {
