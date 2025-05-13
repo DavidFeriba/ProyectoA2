@@ -24,12 +24,17 @@ ion-title {
 
 
 ion-button {
-  --background: #3949ab; /* Azul más suave para los botones */
+  --background: #283593; /* Azul más suave para los botones */
   --color: white;
-  --border-radius: 8px;
+
   font-size: 1rem;
   padding: 10px 20px;
   font-weight: 500;
+}
+.btn-cerrar-sesion {
+  --background: transparent;
+  --color: white; /* o el que contraste con el fondo */
+  --box-shadow: none;
 }
 
 
@@ -133,3 +138,13 @@ ion-footer {
   padding: 12px;
   text-align: center;
 }
+ion-datetime {
+  width: 100% !important;
+  max-width: 100% !important;
+  --background: #ffffff;
+  --color: #000000; // Asegura que el texto sea negro y legible
+  color: #000000 !important; // Forzamos el color por si otro estilo lo pisa
+
+
+}
+

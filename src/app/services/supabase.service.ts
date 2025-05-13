@@ -821,6 +821,18 @@ if(tutorCorreo.vinculado_id == null){
 
     return data;
   }
+  async obtenerAvisosDeAlumno(idAlumno: string) {
+    const { data, error } = await this.supabase
+      .from('avisos')
+      .select(`
+        *
+      `)
+      .eq('id_alumno', idAlumno);
+
+    if (error) throw error;
+
+    return data;
+  }
   async borrarAviso(id: number) {
     const { data, error } = await this.supabase
       .from('avisos')

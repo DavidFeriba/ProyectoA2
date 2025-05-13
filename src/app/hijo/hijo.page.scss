@@ -61,7 +61,7 @@ ion-input {
 
 ion-input ion-label {
   font-weight: 500;
-  color: #00796B; /* Color del texto de las etiquetas */
+  color: black; /* Color del texto de las etiquetas */
 }
 
 
@@ -167,3 +167,55 @@ ion-footer {
   background-color: #0288D1; /* Fondo azul oscuro */
   color: white; /* Texto blanco */
 }
+
+ion-segment {
+  display: flex;
+  flex-wrap: wrap; /* Permite que los botones se ajusten a varias filas si es necesario */
+  justify-content: center; /* Alinea los botones al centro */
+}
+
+ion-segment {
+--background: transparent; /* Fondo transparente para el ion-segment */
+display: flex;
+flex-wrap: wrap; /* Permite que los botones se ajusten a varias filas si es necesario */
+justify-content: center; /* Alinea los botones al centro */
+padding: 0; /* Elimina el padding para que los botones estén ajustados */
+margin: 0; /* Elimina el margen por defecto */
+}
+
+
+ion-segment-button {
+margin: 5px; /* Espacio entre los botones */
+--padding-start: 10px;
+--padding-end: 10px;
+--border-radius: 20px; /* Bordes redondeados para los botones */
+font-size: 16px;
+max-width: 100%; /* Evita que los botones se desborden */
+white-space: nowrap; /* Evita que los botones se desborden con un texto largo */
+--color: #00796B; /* Color del texto del botón */
+}
+
+
+ion-segment-button[aria-selected='true'] {
+--color: #ffffff; /* Color del texto cuando el botón está seleccionado */
+--background: #0097A7; /* Fondo azul para los botones seleccionados */
+}
+.pin-card {
+  margin: 12px 16px;
+  border-radius: 12px;
+  --background: #f4f4f4;
+  --color: #333;
+}
+.info-card {
+  margin: 12px 16px;
+  border-radius: 12px;
+  --background: #f4f4f4;
+  --color: #333;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.info-card:hover {
+  transform: scale(1.02);
+}
+

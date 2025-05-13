@@ -35,3 +35,21 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import "@ionic/angular/css/palettes/dark.system.css";
+
+ion-toolbar {
+  --background: #149df3;
+  --color: white;
+  --min-height: 10vh;     // 10% de la altura del viewport
+  --padding-top: 5vh;     // 5% de la altura del viewport
+}
+.aviso-grado-1 {
+  --background: #fff9c4; /* Amarillo claro */
+}
+
+.aviso-grado-2 {
+  --background: #ffe082; /* Naranja */
+}
+
+.aviso-grado-3 {
+  --background: #ef9a9a; /* Rojo claro */
+}

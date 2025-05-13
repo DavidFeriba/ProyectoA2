@@ -13,8 +13,10 @@ Chart.register(...registerables);
 })
 export class HijoPage implements OnInit, AfterViewInit {
   @ViewChild('myChart') myChartRef!: ElementRef;
+  presentingElement!: HTMLElement | null;
   id: string = '';
   alumno: any = null;
+  avisos: any[] = [];
   chart: any; // Guardar la instancia del gráfico
   chartType: ChartType = 'line'; // Tipo de gráfico inicial
 
@@ -25,7 +27,9 @@ export class HijoPage implements OnInit, AfterViewInit {
   }
 
   async ngOnInit() {
+    this.presentingElement = document.querySelector('.ion-page');
     this.alumno = await this.supabase.obtenerAlumno(this.id);
+    this.avisos = await this.supabase.obtenerAvisosDeAlumno(this.id)
   }
 
   ngAfterViewInit() {

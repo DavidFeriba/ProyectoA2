@@ -1,41 +1,70 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <!-- Botón de retroceso -->
-    <ion-back-button slot = 'start' text = '' defaultHref="/home"></ion-back-button>
-    <ion-title>hijo</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">{{alumno?.nombre}}</ion-title>
+      <ion-title size="large">{{ alumno?.nombre }}</ion-title>
+      <ion-back-button slot="start" text="" defaultHref="/home"></ion-back-button>
     </ion-toolbar>
   </ion-header>
 
-  <ion-content>
-    <!-- Imagen circular -->
-    <div class="photo-container">
-      <img [src]="alumno?.foto" alt="Foto del alumno" class="profile-image" />
-    </div>
+  <!-- Imagen circular -->
+  <div class="photo-container">
+    <img [src]="alumno?.foto" alt="Foto del alumno" class="profile-image" />
+  </div>
 
-    <!-- Canvas para la gráfica -->
-    <canvas #myChart width="400" height="400"></canvas>
+  <!-- Canvas para la gráfica -->
+  <canvas #myChart width="400" height="400"></canvas>
 
-    <!-- Selector de tipo de gráfico -->
-    <ion-segment [(ngModel)]="chartType" (ionChange)="cambiarTipoGrafico()">
-      <ion-segment-button value="line">
-        Línea
-      </ion-segment-button>
-      <ion-segment-button value="bar">
-        Barras
-      </ion-segment-button>
-      <ion-segment-button value="pie">
-        Pastel
-      </ion-segment-button>
-      <ion-segment-button value="radar">
-        Radar
-      </ion-segment-button>
-    </ion-segment>
-  </ion-content>
+  <!-- Selector de tipo de gráfico -->
+  <ion-segment [(ngModel)]="chartType" (ionChange)="cambiarTipoGrafico()">
+    <ion-segment-button value="line">Línea</ion-segment-button>
+    <ion-segment-button value="bar">Barras</ion-segment-button>
+    <ion-segment-button value="pie">Pastel</ion-segment-button>
+    <ion-segment-button value="radar">Radar</ion-segment-button>
+  </ion-segment>
+
+  <!-- PIN del alumno -->
+  <ion-card class="pin-card">
+    <ion-card-content class="ion-text-center">
+      <strong>PIN:</strong> {{ alumno?.pin }}
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Botón para ver avisos -->
+  <ion-button id="open-modal" expand="block">Ver avisos</ion-button>
+
+  <!-- Modal de avisos -->
+  <ion-modal #modal trigger="open-modal" [presentingElement]="presentingElement">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Avisos</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="modal.dismiss()">X</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content class="ion-padding">
+      <ion-list *ngIf="avisos.length > 0; else sinAvisos">
+        <ion-item
+          *ngFor="let aviso of avisos"
+          [ngClass]="{
+            'aviso-grado-1': aviso.grado === 1,
+            'aviso-grado-2': aviso.grado === 2,
+            'aviso-grado-3': aviso.grado === 3
+          }"
+        >
+          <ion-label>
+            {{ aviso.mensaje }}
+          </ion-label>
+        </ion-item>
+      </ion-list>
+
+      <ng-template #sinAvisos>
+        <p class="ion-text-center">No hay avisos para este alumno.</p>
+      </ng-template>
+    </ion-content>
+  </ng-template>
+</ion-modal>
+
 </ion-content>

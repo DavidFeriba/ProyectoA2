@@ -1,22 +1,32 @@
 
 <ion-content [fullscreen]="true">
   <!-- Toolbar superior con título y botón -->
-  <ion-header>
+  <ion-header >
     <ion-toolbar>
-      <ion-title size="large">Profesorado</ion-title>
-      <ion-back-button slot = 'start' text = '' defaultHref="/home"></ion-back-button>
+  <!-- Botón de retroceso en el lado izquierdo -->
+    
+  <ion-buttons slot="start">
+    
+    <ion-back-button text="" defaultHref="/home"></ion-back-button>
+   
+  </ion-buttons>
 
-      <ion-buttons slot="end">
-        <ion-button color="rgb(14 116 144)" (click)="cerrarSesion()">
-          <ion-icon slot="icon-only" name="exit-outline"></ion-icon>
-        </ion-button>
-      </ion-buttons>
-    </ion-toolbar>
+  <!-- Título centrado -->
+  <ion-title class="titulo-profesorado">Profesorado</ion-title>
+  <ion-button size="large" slot="end" (click)="cerrarSesion()" class="btn-cerrar-sesion" fill="clear">
+  <ion-icon name="exit-outline" slot="icon-only" size="large"></ion-icon>
+</ion-button>
 
-    <!-- Toolbar con el calendario (separado del anterior) -->
+  <!-- Botón de cerrar sesión en el lado derecho -->
+ 
+    
+  
+</ion-toolbar>
+  </ion-header>
+
     <ion-datetime presentation="date" [value]="today" [highlightedDates]="highlightedDates"></ion-datetime>
 
-  </ion-header>
+  
   <ion-list>
     <ion-item id="modal2">
       <ion-icon class="formato-icon" aria-hidden="true" name="reader-outline" slot="start"></ion-icon>
@@ -30,7 +40,16 @@
       <ion-icon class="formato-icon" aria-hidden="true" name="alert-outline" slot="start"></ion-icon>
       <ion-label class="grande">Avisos</ion-label>
     </ion-item>
+    <ion-item id="modalAsignaturas">
+      <ion-icon class="formato-icon" aria-hidden="true" name="book-outline" slot="start"></ion-icon>
+      <ion-label class="grande">Asignaturas</ion-label>
+    </ion-item>
+    <ion-item id="modalCursos">
+      <ion-icon class="formato-icon" aria-hidden="true" name="albums-outline" slot="start"></ion-icon>
+      <ion-label class="grande">Cursos</ion-label>
+    </ion-item>
   </ion-list>
+  
 
 
   <ion-modal #modal2 trigger="modal2">
@@ -126,14 +145,18 @@
     <ng-template>
       <ion-content>
         <ion-toolbar>
-          <ion-title>Avisos</ion-title>
-          <ion-buttons slot="end">
-            <ion-button (click)="abrirModalAnadirAviso()" slot="end" color="light">
-              <ion-icon size="large" aria-hidden="true" name="add-circle-outline"></ion-icon>
-            </ion-button>
-            <ion-button color="light" (click)="closeModal(modalAvisos)">Close</ion-button>
-          </ion-buttons>
-        </ion-toolbar>
+  <ion-title>Avisos</ion-title>
+  <ion-buttons slot="start">
+    <ion-button (click)="abrirModalAnadirAviso()" color="light">
+      <ion-icon size="large" aria-hidden="true" name="add-circle-outline"></ion-icon>
+    </ion-button>
+  </ion-buttons>
+  <ion-buttons slot="end">
+    <ion-button (click)="closeModal(modalCursos)" color="light">
+      <ion-icon name="close-circle-outline" slot="icon-only"></ion-icon>
+    </ion-button>
+  </ion-buttons>
+</ion-toolbar>
 
         <ion-list>
           <ion-item-sliding *ngFor="let aviso of avisos">
@@ -190,5 +213,54 @@
       </ion-content>
     </ng-template>
   </ion-modal>
+  <ion-modal #modalAsignaturas trigger="modalAsignaturas">
+  <ng-template>
+    <ion-content>
+      <ion-toolbar>
+        <ion-title>Asignaturas</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="closeModal(modalCursos)" color="light" >
+            <ion-icon name="close-circle-outline" slot="icon-only"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+      <ion-list>
+        <ion-item *ngFor="let asignatura of asignaturas">
+          <ion-avatar slot="start">
+
+          </ion-avatar>
+          <ion-label>
+            <h2>{{asignatura}}</h2>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-content>
+  </ng-template>
+</ion-modal>
+
+<ion-modal #modalCursos trigger="modalCursos">
+  <ng-template>
+    <ion-content>
+      <ion-toolbar>
+        <ion-title>Cursos</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="closeModal(modalCursos)" color="light" >
+            <ion-icon name="close-circle-outline" slot="icon-only"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+      <ion-list>
+        <ion-item *ngFor="let curso of cursos">
+          <ion-avatar slot="start">
+          </ion-avatar>
+          <ion-label>
+            <h2>{{curso}}</h2>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-content>
+  </ng-template>
+</ion-modal>
 
 </ion-content>
+
