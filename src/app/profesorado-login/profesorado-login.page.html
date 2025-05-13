@@ -1,19 +1,35 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>Iniciar sesión</ion-title>
-    <ion-back-button slot = 'start' text = '' defaultHref="/home"></ion-back-button>
-
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <form (ngSubmit)="login()">
-    <ion-input [(ngModel)]="email" type="email" name="email" placeholder="Correo electrónico" required></ion-input>
-    <ion-input [(ngModel)]="password" type="password" name="password" placeholder="Contraseña" required></ion-input>
+  <div class="form-container">
+    <form (ngSubmit)="login()">
+      <ion-input
+        [(ngModel)]="email"
+        type="email"
+        name="email"
+        placeholder="Correo electrónico"
+        required
+        class="rounded-input"
+      ></ion-input>
 
-    <ion-button expand="full" type="submit">Iniciar sesión</ion-button>
-    <ion-text color="danger" *ngIf="errorLogin">
-      <p class="ion-padding-start">Correo o contraseña incorrectos</p>
-    </ion-text>
-  </form>
+      <ion-input
+        [(ngModel)]="password"
+        type="password"
+        name="password"
+        placeholder="Contraseña"
+        required
+        class="rounded-input"
+      ></ion-input>
+
+      <ion-button type="submit" class="rounded-button">Iniciar sesión</ion-button>
+
+      <ion-text color="danger" *ngIf="errorLogin">
+        <p class="error-text">Correo o contraseña incorrectos</p>
+      </ion-text>
+    </form>
+  </div>
 </ion-content>

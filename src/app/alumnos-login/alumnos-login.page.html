@@ -6,11 +6,24 @@
 
 <ion-content [fullscreen]="true">
   <form (ngSubmit)="login()">
-    <ion-input [(ngModel)]="pin" type="password" name="pin" placeholder="PIN" required></ion-input>
+    <div class="login-container">
+      <ion-input
+        [(ngModel)]="pin"
+        type="password"
+        name="pin"
+        placeholder="PIN"
+        required
+        class="rounded-input"
+      ></ion-input>
 
-    <ion-button expand="full" type="submit">Iniciar sesión</ion-button>
+      <ion-button type="submit" class="icon-button" fill="solid">
+        <ion-icon name="log-in-outline"></ion-icon>
+      </ion-button>
+    </div>
+
     <ion-text color="danger" *ngIf="errorLogin">
-      <p class="ion-padding-start">Pin incorrecto</p>
+      <p class="error-text">Pin incorrecto</p>
     </ion-text>
+
   </form>
 </ion-content>

@@ -23,6 +23,7 @@ ion-card {
   color: white; /* texto en blanco */
 }
 
+
 ion-card img {
   width: 100%; /* Hace que la imagen ocupe todo el ancho del card */
   height: auto; /* Mantiene la proporción de la imagen */
@@ -34,8 +35,10 @@ ion-menu::part(backdrop) {
   background-color: rgba(255, 0, 255, 0.5);
 }
 
+
 ion-menu::part(container) {
   border-radius: 0 20px 20px 0;
+
 
   box-shadow: 4px 0px 16px rgba(255, 0, 255, 0.18);
 }
@@ -44,10 +47,12 @@ ion-menu::part(container) {
   padding: 5px; /* Agregar espacio alrededor del texto */
 }
 
+
 .salir-button {
   margin-left: 5px; /* Espacio a la izquierda del icono */
   padding: 5px; /* Espacio alrededor del icono */
 }
+
 
 //Estilo 2
 ion-toolbar {
@@ -55,19 +60,23 @@ ion-toolbar {
   --color: white; /* Color del texto en el toolbar */
 }
 
+
 ion-title {
   font-weight: bold;
   font-size: 24px;
   color: #ffffff;
 }
 
+
 ion-content {
   --background: linear-gradient(to top, #95F5EE, #95F5B8) !important; /* Degradado de azul claro a un azul más intenso */
 }
 
+
 ion-segment {
   margin: 20px;
 }
+
 
 ion-segment-button {
   font-size: 16px;
@@ -75,9 +84,11 @@ ion-segment-button {
   --color-checked: #0097A7;
 }
 
+
 ion-segment-view {
   margin-top: 10px;
 }
+
 
 ion-input {
   margin: 10px 0;
@@ -85,10 +96,14 @@ ion-input {
   --color: #00796B; /* Texto en verde agua */
 }
 
+
 ion-input ion-label {
   font-weight: 500;
   color: #00796B; /* Color del texto de las etiquetas */
 }
+
+
+
 
 
 
@@ -102,9 +117,12 @@ ion-button {
   font-weight: bold;
 }
 
+
 ion-button:hover {
   --background: #00BCD4; /* Efecto hover con un azul más intenso */
 }
+
+
 
 
 ion-chip {
@@ -112,13 +130,16 @@ ion-chip {
   margin: 5px;
 }
 
+
 ion-chip ion-icon {
   color: #00796B; /* Iconos de los chips en verde agua */
 }
 
+
 ion-row {
   margin: 15px 0;
 }
+
 
 ion-col {
   display: flex;
@@ -126,11 +147,13 @@ ion-col {
   align-items: center;
 }
 
+
 ion-icon {
   font-size: 28px;
   margin-left: 10px;
   color: #00796B; /* Color de los iconos */
 }
+
 
 #info {
   position: absolute;
@@ -138,19 +161,23 @@ ion-icon {
   top: 10px;
 }
 
+
 ion-alert {
   --background: #E0F7FA; /* Fondo suave azul para las alertas */
   --color: #00796B; /* Texto verde agua */
 }
 
+
 ion-alert .alert-message {
   font-size: 14px;
 }
+
 
 ion-alert .alert-button-group {
   display: flex;
   justify-content: center;
 }
+
 
 ion-alert .alert-button {
   color: #00796B; /* Botones de alerta en verde agua */
@@ -159,13 +186,14 @@ ion-alert .alert-button {
   color: #00796B; /* Verde agua oscuro */
 }
 
+
 .salir-button {
   --background: #0288D1; /* Azul oscuro para el fondo */
   color: white; /* Blanco para el icono */
 }
 
+
 ion-footer {
   background-color: #0288D1; /* Fondo azul oscuro */
   color: white; /* Texto blanco */
 }
-

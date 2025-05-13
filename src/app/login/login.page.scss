@@ -3,19 +3,23 @@ ion-toolbar {
   --color: white; /* Color del texto en el toolbar */
 }
 
+
 ion-title {
   font-weight: bold;
   font-size: 24px;
   color: #ffffff;
 }
 
+
 ion-content {
   --background: linear-gradient(to top, #95F5EE, #95F5B8) !important; /* Degradado de azul claro a un azul más intenso */
 }
 
+
 ion-segment {
   margin: 20px;
 }
+
 
 ion-segment-button {
   font-size: 16px;
@@ -23,9 +27,11 @@ ion-segment-button {
   --color-checked: #0097A7;
 }
 
+
 ion-segment-view {
   margin-top: 10px;
 }
+
 
 ion-input {
   margin: 10px 0;
@@ -33,16 +39,14 @@ ion-input {
   --color: #00796B; /* Texto en verde agua */
 }
 
+
 ion-input ion-label {
   font-weight: 500;
   color: #00796B; /* Color del texto de las etiquetas */
 }
 
-ion-note {
-  margin-top: 5px;
-  font-size: 12px;
-  color: #D32F2F; /* Rojo para los mensajes de error */
-}
+
+
 
 ion-button {
   margin-top: 20px;
@@ -54,9 +58,11 @@ ion-button {
   font-weight: bold;
 }
 
+
 ion-button:hover {
   --background: #00BCD4; /* Efecto hover con un azul más intenso */
 }
+
 
 ion-footer {
   display: flex;
@@ -64,18 +70,22 @@ ion-footer {
   padding: 20px;
 }
 
+
 ion-chip {
   background-color: #B2EBF2; /* Azul muy claro para los chips */
   margin: 5px;
 }
 
+
 ion-chip ion-icon {
   color: #00796B; /* Iconos de los chips en verde agua */
 }
 
+
 ion-row {
   margin: 15px 0;
 }
+
 
 ion-col {
   display: flex;
@@ -83,11 +93,13 @@ ion-col {
   align-items: center;
 }
 
+
 ion-icon {
   font-size: 28px;
   margin-left: 10px;
   color: #00796B; /* Color de los iconos */
 }
+
 
 #info {
   position: absolute;
@@ -95,20 +107,84 @@ ion-icon {
   top: 10px;
 }
 
+
 ion-alert {
   --background: #E0F7FA; /* Fondo suave azul para las alertas */
   --color: #00796B; /* Texto verde agua */
 }
 
+
 ion-alert .alert-message {
   font-size: 14px;
 }
+
 
 ion-alert .alert-button-group {
   display: flex;
   justify-content: center;
 }
 
+
 ion-alert .alert-button {
   color: #00796B; /* Botones de alerta en verde agua */
 }
+.salir-text {
+  color: #00796B; /* Verde agua oscuro */
+}
+
+
+.salir-button {
+  --background: #0288D1; /* Azul oscuro para el fondo */
+  color: white; /* Blanco para el icono */
+}
+
+
+ion-footer {
+  background-color: #0288D1; /* Fondo azul oscuro */
+  color: white; /* Texto blanco */
+}
+
+
+.form-container {
+  max-width: 90%;
+  width: 320px;
+  margin: 0 auto;
+  padding-top: 40px;
+}
+
+
+/* Inputs redondeados */
+.rounded-input {
+  --border-radius: 30px;
+  --padding-start: 20px;
+  --padding-end: 20px;
+  margin-bottom: 15px;
+  --background: #E0F7FA;
+  --color: #00796B;
+}
+
+
+/* Botón redondeado */
+.rounded-button {
+  --border-radius: 30px;
+  width: 100%;
+  --background: #4DD0E1;
+  --color: white;
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+
+/* Mensaje de error */
+.error-text {
+  margin-top: 10px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 14px;
+  color: #D32F2F;
+  background-color: #FFEBEE;
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+
+
