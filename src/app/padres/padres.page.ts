@@ -266,6 +266,11 @@ export class PadresPage implements OnInit {
 
   async addAlumno(data: any) {
     let pin :number = 0
+    const regex = /^[1-6][A-Z]$/;
+    if (!regex.test(data.curso)) {
+      await this.malRegexToast();
+      return; // Detiene la función si el formato no es válido
+    }
     do {
       pin = Math.floor(10000 + Math.random() * 90000);
     } while (!this.supabaseService.pinExiste(pin));
@@ -308,6 +313,17 @@ export class PadresPage implements OnInit {
     this.alumnos=[]
     this.supabaseService.cerrarSesion()
     this.router.navigate(['/home'])
+  }
+
+  async malRegexToast(){
+    const toast = await this.toastController.create({
+      message: "Formato de curso inválido. Debe ser algo como 1A, 3B, etc.'",
+      duration: 3000,
+      color: 'danger',
+      position: 'top'
+    });
+    toast.present();
+  
   }
 
 

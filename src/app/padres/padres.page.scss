@@ -37,7 +37,7 @@ ion-menu::part(backdrop) {
 
 
 ion-menu::part(container) {
-  border-radius: 0 20px 20px 0;
+  border-radius: 20px 0 0 20px;
 
 
   box-shadow: 4px 0px 16px rgba(255, 0, 255, 0.18);
@@ -192,6 +192,9 @@ ion-alert .alert-button {
 ion-footer {
   background-color: transparent; /* Fondo azul oscuro */
   color: white; /* Texto blanco */
+}
+ion-menu-button {
+  color: #3a0279
 }
 ion-menu {
   ion-content {

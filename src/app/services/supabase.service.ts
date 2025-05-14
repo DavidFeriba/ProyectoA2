@@ -846,6 +846,58 @@ if(tutorCorreo.vinculado_id == null){
 
     return data;
   }
+  async cogerAsignaturas(profesor_id: string){
+    const {data} = await this.supabase
+      .from('profesores')
+      .select('asignaturas')
+      .eq('id', profesor_id)
+      .single();
+      return data?.asignaturas
+  }
+  async anadirAsignatura(profesor_id: string ,asignatura: string){
+    const asignaturas: any = await this.cogerAsignaturas(profesor_id)
+    asignaturas.push(asignatura)
+    await this.supabase
+      .from('profesores')
+      .update({asignaturas: asignaturas})
+      .eq('id', profesor_id);
+}
+  async eliminarAsignatura(profesor_id: string, asignaturaEliminada: string){
+    let asignaturas: any = await this.cogerAsignaturas(profesor_id)
+    asignaturas = asignaturas.filter(
+      (asignatura: string) => asignatura !== asignaturaEliminada
+    )
+    await this.supabase
+    .from('profesores')
+    .update({asignaturas: asignaturas})
+    .eq('id', profesor_id)
+  }
+  async cogerCursos(profesor_id: string){
+    const {data} = await this.supabase
+      .from('profesores')
+      .select('cursos')
+      .eq('id', profesor_id)
+      .single();
+      return data?.cursos
+  }
+  async anadirCurso(profesor_id: string ,curso: string){
+    const cursos: any = await this.cogerCursos(profesor_id)
+    cursos.push(curso)
+    await this.supabase
+      .from('profesores')
+      .update({cursos: cursos})
+      .eq('id', profesor_id);
+}
+  async eliminarCurso(profesor_id: string, cursoEliminado: string){
+    let cursos: any = await this.cogerCursos(profesor_id)
+    cursos = cursos.filter(
+      (curso: string) => curso !== cursoEliminado
+    )
+    await this.supabase
+    .from('profesores')
+    .update({cursos: cursos})
+    .eq('id', profesor_id)
+  }
 }
 
 

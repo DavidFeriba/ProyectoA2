@@ -61,10 +61,33 @@ export class HijoPage implements OnInit, AfterViewInit {
       },
     });
   }
-
+  cambiandoGrafico: boolean = false;
   // Función para cambiar el tipo de gráfico
-  cambiarTipoGrafico() {
-    this.chart.destroy(); // Eliminar el gráfico actual
-    this.crearGrafico(); // Crear un nuevo gráfico con el nuevo tipo
+  async cambiarTipoGrafico() {
+    this.cambiandoGrafico = true;
+  
+    // Destruye y vuelve a crear el gráfico
+    if (this.chart) {
+      this.chart.destroy();
+    }
+  
+    // Asegura que se haya cambiado el tipo antes de crear el nuevo
+    await new Promise(resolve => setTimeout(resolve, 50)); // pequeño retraso opcional
+  
+    this.crearGrafico();
+  
+    // Espera un momento para que el gráfico se renderice antes de volver a habilitar todo
+    setTimeout(() => {
+      
+      this.cambiandoGrafico = false;
+      
+  
+    }, 300);
+  }
+  @ViewChild('modal', { static: true }) modal!: HTMLIonModalElement;
+
+  abrirModal() {
+    if (this.cambiandoGrafico) return;
+    this.modal.present();
   }
 }

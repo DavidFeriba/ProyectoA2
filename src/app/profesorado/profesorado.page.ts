@@ -15,11 +15,15 @@ export class ProfesoradoPage implements OnInit {
   message = 'This modal example uses the modalController to present and dismiss modals.';
 
   today: string;
+  nuevaAsignatura: string = '';
+  nuevoCurso: string = '';
   avisos: any[] = []
   profesor_uid: string = '';
   profesor_id:string = ''
   asignaturas: string[]= []
+  asignaturasTemporales: string[] = [];
   cursos: string[] = []
+  errorCurso: string = '';
   public alumnos:any[] = [];
   public alumnosFiltrados: any[] = [];
   tareas:any[] = []
@@ -73,28 +77,7 @@ export class ProfesoradoPage implements OnInit {
     },
   ];
 
-    highlightedDates = [
-      {
-        date: '2025-03-05',
-        textColor: '#800080',
-        backgroundColor: '#ffc0cb',
-      },
-      {
-        date: '2023-01-10',
-        textColor: '#09721b',
-        backgroundColor: '#c8e5d0',
-      },
-      {
-        date: '2023-01-20',
-        textColor: 'var(--ion-color-secondary-contrast)',
-        backgroundColor: 'var(--ion-color-secondary)',
-      },
-      {
-        date: '2023-01-23',
-        textColor: 'rgb(68, 10, 184)',
-        backgroundColor: 'rgb(211, 200, 229)',
-      },
-    ];
+
 
 
     constructor( private alertController: AlertController, private supabase: SupabaseService,private router:ActivatedRoute, private router2:Router) {
@@ -431,4 +414,39 @@ async borrarAviso(idAviso: number) {
     console.error('No se pudo borrar el aviso:', error);
   }
 }
+anadirAsignatura() {
+  const asignatura = this.nuevaAsignatura.trim();
+  if (asignatura) {
+    this.asignaturas.push(asignatura);
+    this.supabase.anadirAsignatura(this.profesor_id,asignatura);
+    this.nuevaAsignatura = '';
+  
+  }
+}
+
+
+eliminarAsignatura(asignatura: string, i : number) {
+  this.supabase.eliminarAsignatura(this.profesor_id, asignatura)
+  this.asignaturas.splice(i,1)
+}
+
+anadirCurso(){
+  const curso = this.nuevoCurso.trim().toUpperCase();
+  const regex = /^[1-6][A-Z]$/;
+  if (!regex.test(curso)) {
+    this.errorCurso = 'Formato no válido. Usa el formato 1A, 2B...';
+    return;
+  }
+  if (curso) {
+    this.cursos.push(curso);
+    this.supabase.anadirCurso(this.profesor_id,curso);
+    this.nuevoCurso = '';
+  
+  }
+}
+eliminarCurso(curso: string, i : number){
+  this.supabase.eliminarCurso(this.profesor_id, curso)
+  this.cursos.splice(i,1)
+}
+
 }

@@ -147,4 +147,17 @@ ion-datetime {
 
 
 }
-
+.error-text {
+  margin-top: 10px;
+  padding: 10px 16px; /* Padding manual */
+  display: block;
+  text-align: center;
+  font-weight: 600;
+  font-size: 14px;
+  color: #D32F2F; /* Rojo fuerte */
+  background-color: #FFEBEE; /* Fondo suave */
+  border-radius: 8px;
+  max-width: 280px;
+  margin-left: auto;
+  margin-right: auto;
+}
