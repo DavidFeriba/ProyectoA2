@@ -1,10 +1,11 @@
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
+
+  <ion-header collapse>
     <ion-toolbar>
       <ion-title size="large">{{ alumno?.nombre }}</ion-title>
       <ion-back-button slot="start" text="" defaultHref="/home"></ion-back-button>
     </ion-toolbar>
   </ion-header>
+  <ion-content [fullscreen]="true">
 
   <!-- Imagen circular -->
   <div class="photo-container">
@@ -31,6 +32,9 @@
 
   <!-- Botón para ver avisos -->
   <ion-button (click)="abrirModal()" [disabled]="cambiandoGrafico" expand="block">Ver avisos</ion-button>
+  <ion-button color="danger" (click)="confirmarEliminacion()" expand="block">
+    Eliminar hijo
+  </ion-button>
 
   <!-- Modal de avisos -->
   <ion-modal #modal [presentingElement]="presentingElement">

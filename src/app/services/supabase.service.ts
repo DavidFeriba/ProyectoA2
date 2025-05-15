@@ -898,6 +898,17 @@ if(tutorCorreo.vinculado_id == null){
     .update({cursos: cursos})
     .eq('id', profesor_id)
   }
+  async eliminarAlumno(alumno_id: string){
+    await this.supabase.from('tareas_completadas').delete().eq('alumno_id', alumno_id);
+    await this.supabase.from('logros_alumnos').delete().eq('alumno_id', alumno_id);
+    await this.supabase.from('alumno_tutor').delete().eq('alumno_id', alumno_id);
+    await this.supabase.from('notas').delete().eq('alumno_id', alumno_id);
+
+    await this.supabase
+    .from('alumnos')
+    .delete()
+    .eq('id', alumno_id)
+  }
 }
 
 

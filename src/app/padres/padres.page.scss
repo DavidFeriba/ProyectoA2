@@ -187,6 +187,13 @@ ion-alert .alert-button {
   --background: #0288D1; /* Azul oscuro para el fondo */
   color: white; /* Blanco para el icono */
 }
+.profile-image {
+  width: 10px;      /* Tamaño de la imagen */
+  height: 10px;     /* Tamaño de la imagen */
+  border-radius: 50%; /* Hace que la imagen sea circular */
+  object-fit: cover;  /* Asegura que la imagen cubra todo el círculo */
+  border: 3px solid #2196f3;
+}
 
 
 ion-footer {

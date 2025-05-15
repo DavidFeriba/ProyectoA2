@@ -54,13 +54,20 @@
 
     <ion-content [fullscreen]="true">
 
+      <ng-container *ngIf="alumnos.length === 0">
+        <div class="ion-text-center ion-padding">
+          <ion-icon name="alert-circle-outline" size="large" color="medium"></ion-icon>
+          <p>No tienes ningún hijo registrado. Añádelo desde el menú de opciones.</p>
+        </div>
+      </ng-container>
+
 
       <!-- Grid de alumnos -->
       <ion-grid>
         <ion-row>
           <ion-col size="12" size-md="6" size-lg="4" *ngFor="let alumno of alumnos">
             <ion-card>
-              <img [routerLink]="['/hijo', alumno.id]" [src]="alumno.foto" alt="Foto de {{ alumno.nombre }}">
+              <img [routerLink]="['/hijo', alumno.id]" [src]="alumno.foto" alt="Foto de {{ alumno.nombre }}" class="profile-image">
               <ion-card-header class="card-header-center">
                 <ion-card-title>{{ alumno.nombre }}</ion-card-title>
                 <ion-card-subtitle>{{ alumno.apellidos }} || {{ alumno.curso }}º</ion-card-subtitle>
