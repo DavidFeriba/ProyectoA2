@@ -44,8 +44,7 @@ export class RevisarTareasPage implements OnInit {
 
     try {
       await this.supabase.actualizarEstadoTareaCompletada(
-        tarea.tareas.id,
-        Number(this.idAlumno),  // Convertir idAlumno de string a número
+        tarea.tareas.id,  // Convertir idAlumno de string a número
         true
       );
       console.log('tareaid: ', tarea.tareas.id)
@@ -56,7 +55,7 @@ export class RevisarTareasPage implements OnInit {
   }
   async rechazarTarea(tarea: any) {
     try {
-      await this.supabase.actualizarEstadoTareaCompletada(tarea.tareas.id, Number(this.idAlumno), false);
+      await this.supabase.actualizarEstadoTareaCompletada(tarea.tareas.id, false);
       this.tareas = this.tareas.filter(t => t.tareas.id !== tarea.tareas.id);
     } catch (error) {
       console.error('Error al rechazar la tarea:', error);

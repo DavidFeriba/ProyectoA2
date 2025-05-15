@@ -558,7 +558,7 @@ if(tutorCorreo.vinculado_id == null){
     const { data, error } = await this.supabase
       .from('tareas_completadas')  // Tabla donde se guarda el estado completado
       .upsert([
-        { alumno_id: alumnoId, tarea_id: tareaId, completada: estado, fecha_completada: new Date() }
+        { alumno_id: alumnoId, tarea_id: tareaId, completada: estado, fecha_completada: new Date(), revisada: false }
       ], { onConflict: 'alumno_id,tarea_id' })  // Usar una cadena separada por comas
     if (error) {
       console.error("Error al actualizar estado de tarea:", error);
@@ -672,7 +672,7 @@ if(tutorCorreo.vinculado_id == null){
 
     return error ? [] : data;
   }
-  async actualizarEstadoTareaCompletada(tareaId: number, alumnoId: number, completada: boolean) {
+  async actualizarEstadoTareaCompletada(tareaId: number, completada: boolean) {
     const { error } = await this.supabase
       .from('tareas_completadas')
       .update({
@@ -682,10 +682,8 @@ if(tutorCorreo.vinculado_id == null){
       })
 
       .eq('tarea_id', tareaId)
-      .eq('alumno_id', alumnoId);
 
       console.log(tareaId)
-      console.log (alumnoId)
 
 
     if (error) throw error;

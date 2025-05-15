@@ -1,15 +1,10 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title slot="end">revisar-tareas</ion-title>
-    <ion-back-button slot = 'start' text = '' defaultHref="/home"></ion-back-button>
 
-  </ion-toolbar>
-</ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
+  <ion-header>
     <ion-toolbar>
-      <ion-title size="large">revisar-tareas</ion-title>
+      <ion-title size="large">Tareas por revisar</ion-title>
+          <ion-back-button slot = 'start' text = '' defaultHref="/home"></ion-back-button>
     </ion-toolbar>
     <ion-list>
       <ion-card *ngFor="let tarea of tareas">
@@ -18,7 +13,7 @@
         </ion-card-header>
 
         <ion-card-content>
-          <ion-img [src]="tarea.foto"></ion-img>
+         <ion-img [src]="tarea.foto || 'assets/default-tarea.png'"></ion-img>
           <p><strong>Página:</strong> {{ tarea.pagina }}</p>
           <p><strong>Actividades:</strong> {{ tarea.actividades }}</p>
           <div class="botones-tarea">

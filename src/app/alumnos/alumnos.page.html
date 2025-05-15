@@ -65,7 +65,7 @@
         </ion-grid>
         <ion-list *ngIf="tareasDelDia.length > 0; else sinTareas">
           <ion-list-header>
-            <ion-label>Tareas para el {{ tareasDelDia[0]?.fecha | date: 'EEEE d' }}</ion-label>
+            <ion-label>Tareas</ion-label>
           </ion-list-header>
           <ion-item *ngFor="let tarea of tareasDelDia">
             <ion-label>
