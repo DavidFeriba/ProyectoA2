@@ -12,6 +12,7 @@
 
     <!-- Contenido del menú lateral con un item de ejemplo -->
     <ion-content class="ion-padding">
+
       <ion-list>
         <ion-item button id="open-toast" (click)="vincularAlert()">
           <ion-icon name="people-circle-outline" slot="start"></ion-icon>
@@ -40,6 +41,16 @@
 
   <!-- Contenido principal -->
   <div class="ion-page" id="main-content">
+    <!-- Pantalla de carga -->
+<div *ngIf="cargando" class="pantalla-carga">
+  <!-- Imagen de fondo -->
+  <div class="fondo"></div>
+
+  <!-- GIF centrado -->
+  <div class="contenedor-gif">
+    <img src="assets/CargandoCartelAnimacion.gif" alt="Cargando..." />
+  </div>
+</div>
     <ion-header>
       <ion-toolbar>
         <ion-back-button slot="start" text="" defaultHref="/home"></ion-back-button>

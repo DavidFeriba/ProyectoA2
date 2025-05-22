@@ -46,6 +46,10 @@ const routes: Routes = [
     path: 'revisar-tareas',
     loadChildren: () => import('./revisar-tareas/revisar-tareas.module').then( m => m.RevisarTareasPageModule)
   },
+  {
+    path: 'cargando',
+    loadChildren: () => import('./cargando/cargando.module').then( m => m.CargandoPageModule)
+  },
 
  
 ];

@@ -233,3 +233,19 @@ ion-radio.ios::part(container) {
 .radio-checked.ios::part(container) {
   border-color: #6815ec;
 }
+
+.error-text {
+  margin-top: 10px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 14px;
+  color: #D32F2F;
+  background-color: #FFEBEE;
+  padding: 8px 12px;
+  border-radius: 8px;
+  max-width: 320px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+

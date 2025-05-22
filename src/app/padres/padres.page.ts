@@ -23,6 +23,8 @@ export class PadresPage implements OnInit {
   tutor_uid:string = ''
   tutor_vinculado_id: number= -1
 
+  cargando: boolean = true;
+
 
 
   public alumnos: Alumno[] = [];
@@ -46,6 +48,14 @@ export class PadresPage implements OnInit {
       const alumnosPropios = await this.supabaseService.obtenerAlumnosDelTutor(this.tutor_uid) || [];
       const alumnosVinculado = await this.supabaseService.obtenerAlumnosDelTutor(this.tutor_vinculado_id);
       this.alumnos = alumnosPropios.concat(alumnosVinculado)
+      setTimeout(() => {
+        this.cargando = false; // Aplica fade-out
+
+        // Después de que termine la animación, quitamos del DOM
+        setTimeout(() => {
+          this.cargando = false;
+        }, 1000); // Tiempo igual al de la animación
+      }, 2000);
 
 
 
@@ -323,7 +333,7 @@ export class PadresPage implements OnInit {
       position: 'top'
     });
     toast.present();
-  
+
   }
 
 

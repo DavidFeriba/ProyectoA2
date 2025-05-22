@@ -28,17 +28,41 @@
   [(ngModel)]="nombre"fill="solid"label="Nombre"placeholder="Tu nombre"labelPlacement="floating"[color]="nombreInvalidoTutor ? 'danger' : 'primary'"
 ></ion-input>
 <ion-note *ngIf="nombreInvalidoTutor" color="danger">El nombre es obligatorio</ion-note>
-
 <ion-input
-  [(ngModel)]="apellidos"fill="solid"label="Apellidos"placeholder="Apellidos"labelPlacement="floating"[color]="apellidosInvalidoTutor ? 'danger' : 'primary'"
+  [(ngModel)]="apellidos"fill="solid"label="Apellidos"placeholder="Tus apellidos"labelPlacement="floating"[color]="apellidosInvalidoTutor ? 'danger' : 'primary'"
 ></ion-input>
-<ion-note *ngIf="apellidosInvalidoTutor" color="danger">Introduce tus apellidos</ion-note>
+<ion-note *ngIf="apellidosInvalidoTutor" color="danger">El nombre es obligatorio</ion-note>
 
 
-<ion-input
-  [(ngModel)]="password" type="password" fill="solid" label="Contraseña" placeholder="Contraseña" labelPlacement="floating" [color]="passwordInvalidoTutor ? 'danger' : 'primary'"
-></ion-input>
+
+  <ion-input
+    [(ngModel)]="password"
+    type="password"
+    fill="solid"
+    label="Contraseña"
+    placeholder="Contraseña"
+    labelPlacement="floating"
+    [color]="passwordInvalidoTutor ? 'danger' : 'primary'"
+  >
+  <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+</ion-input>
+
+
 <ion-note *ngIf="passwordInvalidoTutor" color="danger">Mínimo 6 caracteres</ion-note>
+
+<ion-input
+  [(ngModel)]="confirmarContra"
+  [type]="verContra ? 'text' : 'password'"
+  fill="solid"
+  label="Confirmar Contraseña"
+  placeholder="Repite la contraseña"
+  labelPlacement="floating"
+  [color]="confirmarContraErrorTutor ? 'danger' : 'primary'"
+>
+<ion-input-password-toggle slot="end"></ion-input-password-toggle>
+</ion-input>
+<ion-note *ngIf="confirmarContraErrorTutor" color="danger">Las contraseñas no coinciden</ion-note>
+
 
       <ion-radio-group (click) =debug() [(ngModel)]="rol">
         <ion-item>
@@ -67,8 +91,20 @@
       <ion-note *ngIf="nombreInvalidoProfesor" color="danger">Nombre no válido</ion-note>
       <ion-input [(ngModel)]="apellidos" fill="solid" labelPlacement="floating" label="Apellidos" placeholder="Apellidos"></ion-input>
       <ion-note *ngIf="apellidosInvalidoProfesor" color="danger">Apellidos no válidos</ion-note>
-      <ion-input [(ngModel)]="password" type="password"  fill="solid" labelPlacement="floating" label="Contraseña" placeholder="contraseña"></ion-input>
+      <ion-input [(ngModel)]="password" type="password"  fill="solid" labelPlacement="floating" label="Contraseña" placeholder="contraseña">  <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+      </ion-input>
       <ion-note *ngIf="passwordInvalidoProfesor" color="danger">La contraseña debe tener más de 6 carácteres</ion-note>
+      <ion-input
+  [(ngModel)]="confirmarContra"
+  [type]="verContra ? 'text' : 'password'"
+  fill="solid"
+  label="Confirmar Contraseña"
+  placeholder="Repite la contraseña"
+  labelPlacement="floating"
+  [color]="confirmarContraErrorProfesor ? 'danger' : 'primary'"
+>  <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+</ion-input>
+<ion-note *ngIf="confirmarContraErrorProfesor" color="danger">Las contraseñas no coinciden</ion-note>
 
       <ion-row>
         <ion-col size="9">
@@ -87,7 +123,7 @@
 
       <ion-row>
         <ion-col size="9">
-          <ion-input [(ngModel)]="curso" type="text" fill="solid" labelPlacement="floating" label="Añadir curso" placeholder="Añadir curso"></ion-input>
+          <ion-input [(ngModel)]="curso" type="text" fill="solid" labelPlacement="floating" label="Añadir curso" placeholder="Añadir curso (Ej: 1A, 2B...)"></ion-input>
         </ion-col>
         <ion-col size="3">
           <ion-button (click)="anadirCurso()">+</ion-button>

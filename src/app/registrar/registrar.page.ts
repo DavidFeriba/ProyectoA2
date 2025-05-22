@@ -30,6 +30,10 @@ export class RegistrarPage implements OnInit {
   passwordInvalidoProfesor: boolean = false;
   asignaturasInvalido: boolean = false;
   cursosInvalido: boolean = false
+  confirmarContra: string = ''
+  confirmarContraErrorTutor : boolean = false;
+  confirmarContraErrorProfesor : boolean = false;
+  verContra: boolean = false;
 
   constructor(private toastController: ToastController, private router:ActivatedRoute, private supabaseService: SupabaseService) { }
 
@@ -37,20 +41,21 @@ export class RegistrarPage implements OnInit {
   }
 
   async registerTutor() {
+    this.confirmarContraErrorTutor = this.password !== this.confirmarContra;
+
     this.emailInvalidoTutor = !this.email || !this.email.includes('@');
     this.nombreInvalidoTutor = !this.nombre || this.nombre.trim().length < 2;
     this.apellidosInvalidoTutor = !this.apellidos || this.apellidos.trim().length < 2;
     this.passwordInvalidoTutor = !this.password || this.password.length < 6;
 
 
-    const hayErrores = this.emailInvalidoTutor || this.nombreInvalidoTutor || this.apellidosInvalidoTutor || this.passwordInvalidoTutor || this.asignaturasInvalido || this.cursosInvalido;
+    const hayErrores = this.emailInvalidoTutor || this.nombreInvalidoTutor || this.apellidosInvalidoTutor || this.passwordInvalidoTutor || this.asignaturasInvalido || this.cursosInvalido || this.confirmarContraErrorTutor;
     const isCorreoRepetido = await this.correoRepetido()
     if (hayErrores || isCorreoRepetido) return;
     // Llamar a la función de registro con los valores del formulario
     this.supabaseService.registerTutor(this.email, this.password, this.rol,this.nombre,this.apellidos)
       .then(user => {
-        console.log('Usuario registrado', user);
-        this.mostrarToast("Registrado como "+this.rol+ " correctamente","success")
+        this.mostrarToast("¡Registrado con éxito! Revisa tu correo (y el spam)", "success");
         // Aquí puedes redirigir al usuario o mostrar un mensaje
       })
       .catch(error => {
@@ -58,6 +63,8 @@ export class RegistrarPage implements OnInit {
       });
   }
   async registerProfesor() {
+    this.confirmarContraErrorProfesor = this.password !== this.confirmarContra;
+
     this.emailInvalidoProfesor = !this.email || !this.email.includes('@');
     this.nombreInvalidoProfesor = !this.nombre || this.nombre.trim().length < 2;
     this.apellidosInvalidoProfesor = !this.apellidos || this.apellidos.trim().length < 2;
@@ -65,13 +72,13 @@ export class RegistrarPage implements OnInit {
     this.asignaturasInvalido = this.asignaturas.length < 1
     this.cursosInvalido = this.cursos.length < 1
 
-    const hayErrores = this.emailInvalidoProfesor || this.nombreInvalidoProfesor || this.apellidosInvalidoProfesor || this.passwordInvalidoProfesor;
+    const hayErrores = this.emailInvalidoProfesor || this.nombreInvalidoProfesor || this.apellidosInvalidoProfesor || this.passwordInvalidoProfesor || this.confirmarContraErrorProfesor;
     const isCorreoRepetido = await this.correoRepetido()
     if (hayErrores || isCorreoRepetido) return;
     // Llamar a la función de registro con los valores del formulario
     this.supabaseService.registerProfesor(this.email, this.password, this.asignaturas, this.cursos,this.nombre,this.apellidos)
       .then(user => {
-        console.log('Usuario registrado', user);
+        this.mostrarToast("¡Registrado con éxito! Revisa tu correo (y el spam)", "success");
         // Aquí puedes redirigir al usuario o mostrar un mensaje
       })
       .catch(error => {
@@ -82,6 +89,7 @@ export class RegistrarPage implements OnInit {
     if(this.asignaturas.length < 8){
       this.asignaturas.push(this.asignatura)
     }
+    this.asignatura = ''
 
   }
   eliminarAsignatura(asignatura: string) {
@@ -97,6 +105,7 @@ export class RegistrarPage implements OnInit {
       this.cursos.push(this.curso)
       this.curso = '';
     }
+    this.curso = ''
   }
   eliminarCurso(curso: string) {
     const i = this.asignaturas.indexOf(curso)
@@ -115,9 +124,10 @@ export class RegistrarPage implements OnInit {
       message: mensaje,
       duration: 2000,
       color: color,
-      position: 'bottom',
+      position: 'top',
     });
     await toast.present();
+    console.log("toast")
   }
   async correoRepetido() {
       // Llamamos a la función obtenerCorreos() que devuelve una promesa

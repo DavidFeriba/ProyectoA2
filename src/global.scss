@@ -53,3 +53,11 @@ ion-toolbar {
 .aviso-grado-3 {
   --background: #ef9a9a; /* Rojo claro */
 }
+
+@media (prefers-color-scheme: dark) {
+  // Esto activa el tema oscuro automáticamente
+  :root {
+    --ion-background-color: #000000;
+
+  }
+}

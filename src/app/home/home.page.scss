@@ -225,3 +225,36 @@ ion-alert .alert-button-group {
 ion-alert .alert-button {
   color: #00796B; /* Botones de alerta en verde agua */
 }
+.contenedor {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+}
+
+.imagen-responsiva {
+  width: 100%;
+  max-width: 100px; /* antes era 200px, ahora un poco más pequeño */
+  transform: scale(1.5); /* antes era 2 */
+  transform-origin: center;
+}
+
+@media (max-width: 600px) {
+  .imagen-responsiva {
+    transform: scale(1.05); /* antes era 1.2 */
+  }
+}
+
+
+.texto-bienvenida {
+  margin-top: 1rem;
+  font-size: 1.2rem;
+  text-align: center;
+  color: #2c3e50;
+  font-family: 'Press Start 2P', cursive;
+  background-color: #fceabb;
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+  box-shadow: 2px 2px 0 #888;
+}
+

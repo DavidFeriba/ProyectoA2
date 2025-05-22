@@ -227,4 +227,39 @@ ion-menu {
     }
   }
 }
+.pantalla-carga {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
 
+/* Imagen de fondo que ocupa toda la pantalla */
+.pantalla-carga .fondo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('/assets/CargandoAnimationFondo.png');
+  background-size: cover;
+  background-position: center;
+  z-index: 1;
+}
+
+/* Contenedor del GIF centrado */
+.pantalla-carga .contenedor-gif {
+  position: relative;
+  z-index: 2;
+}
+
+.pantalla-carga .contenedor-gif img {
+  width: 150px;
+  height: auto;
+}

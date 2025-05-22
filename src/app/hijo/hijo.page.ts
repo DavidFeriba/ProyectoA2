@@ -47,7 +47,7 @@ export class HijoPage implements OnInit, AfterViewInit {
     this.chart = new Chart(ctx, {
       type: this.chartType, // Usar el tipo de gráfico actual
       data: {
-        labels: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'],
+        labels: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
         datasets: [
           {
             label: 'Deberes entregados X día',

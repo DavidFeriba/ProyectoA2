@@ -19,13 +19,14 @@
       ></ion-input>
 
       <ion-input
-        [(ngModel)]="password"
-        type="password"
-        name="password"
-        placeholder="Contraseña"
-        required
-        class="rounded-input"
-      ></ion-input>
+      (ionInput)="password = ($event.target.value || '') + ''"
+      [value]="password"
+  name="password"
+  type="password"
+  placeholder="Contraseña"
+  required
+  class="rounded-input"
+></ion-input>
 
       <ion-button type="submit" class="rounded-button">Iniciar sesión</ion-button>
 
