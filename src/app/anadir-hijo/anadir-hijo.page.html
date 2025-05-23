@@ -1,0 +1,40 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button text="" defaultHref="/padres"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Añadir Hijo</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding fondo-anadir">
+  <ion-card class="form-card">
+    <form (ngSubmit)="guardar()">
+      <ion-item>
+        <ion-label position="floating">Nombre</ion-label>
+        <ion-input [(ngModel)]="nombre" name="nombre" required></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Apellidos</ion-label>
+        <ion-input [(ngModel)]="apellidos" name="apellidos" required></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Curso (ej: 1A, 2B...)</ion-label>
+        <ion-input [(ngModel)]="curso" name="curso" required></ion-input>
+      </ion-item>
+
+      <div class="contenedor-camara">
+  <ion-button fill="clear" (click)="seleccionarFoto()" class="icono-camara">
+    <ion-icon slot="icon-only" name="camera"></ion-icon>
+  </ion-button>
+</div>
+ <div *ngIf="selectedPhoto" class="ion-text-center">
+        <img [src]="selectedPhoto" class="preview-foto" />
+      </div>
+
+      <ion-button type="submit" expand="block" class="ion-margin-top">Guardar</ion-button>
+    </form>
+  </ion-card>
+</ion-content>

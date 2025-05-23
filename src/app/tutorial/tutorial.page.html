@@ -1,0 +1,47 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+     <ion-back-button slot = 'start' text = '' defaultHref="/home"></ion-back-button>
+
+    <ion-title>Tutorial</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div id="container">
+    <ion-card color="success">
+      <ion-card-header>
+        <ion-card-title class="centrar">
+          <ion-icon name="school-outline" size="large"></ion-icon>
+          Alumnos
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content class="card-content">
+        Los alumnos pueden subir fotos de sus deberes, ver las tareas asignadas y ganar recompensas por completarlas. Los padres tienen que proporcionar el PIN para poder entrar.
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card color="warning">
+      <ion-card-header>
+        <ion-card-title class="centrar">
+          <ion-icon name="briefcase-outline" size="large"></ion-icon>
+          Profesores
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content class="card-content">
+        Los profesores pueden asignar tareas, revisar el progreso de los alumnos e informar sobre el comportamiento del hijo.
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card color="primary">
+      <ion-card-header>
+        <ion-card-title class="centrar">
+          <ion-icon name="people-circle-outline" size="large"></ion-icon>
+          Tutores
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content class="card-content">
+        Los tutores pueden ver el avance de sus hijos mediante estadísticas. Para ello, crea los hijos necesarios y si vinculate con tu pareja.
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

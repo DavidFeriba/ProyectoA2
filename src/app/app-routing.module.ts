@@ -50,6 +50,14 @@ const routes: Routes = [
     path: 'cargando',
     loadChildren: () => import('./cargando/cargando.module').then( m => m.CargandoPageModule)
   },
+  {
+    path: 'anadir-hijo',
+    loadChildren: () => import('./anadir-hijo/anadir-hijo.module').then( m => m.AnadirHijoPageModule)
+  },
+  {
+    path: 'tutorial',
+    loadChildren: () => import('./tutorial/tutorial.module').then( m => m.TutorialPageModule)
+  },
 
  
 ];

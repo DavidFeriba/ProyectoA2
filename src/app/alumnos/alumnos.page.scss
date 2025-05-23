@@ -7,6 +7,7 @@ ion-datetime {
 
 
 }
+
 ion-col.seleccionado {
   background-color: #cce5ff;
   border-radius: 8px;
@@ -87,14 +88,14 @@ ion-toolbar {
 
 
     ion-segment-button {
-      --color-checked: #00796b;
-      --indicator-color: #b2ebf2;
+  --color: #ffffff; // Texto normal
+  --color-checked: #ffffff; // Texto cuando está seleccionado
+  --indicator-color: #004d40;
 
-
-      ion-label {
-        font-size: 1.1rem;
-      }
-    }
+  ion-label {
+    color: #ffffff !important;
+  }
+}
   }
 }
 

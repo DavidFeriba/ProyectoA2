@@ -1,0 +1,62 @@
+.fondo-anadir {
+  --background: linear-gradient(to top, #95F5EE, #95F5B8) !important;
+}
+
+.form-card {
+  width: 90%;
+  max-width: 400px;
+  margin: 20px auto;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  background: white;
+}
+
+.preview-foto {
+  width: 100%;
+  max-height: 200px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+ion-item {
+  --background: #E0F7FA;
+  --color: #00796B;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+ion-label {
+  font-weight: 500;
+  color: #00796B;
+}
+
+ion-button {
+  --background: #4DD0E1;
+  --color: white;
+  --border-radius: 8px;
+  font-weight: bold;
+}
+
+ion-button:hover {
+  --background: #00BCD4;
+}
+.icono-camara {
+  font-size: 28px;
+  color: #00796B;
+  --padding-start: 0;
+  --padding-end: 0;
+}
+.contenedor-camara {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.icono-camara {
+  font-size: 32px;
+  color: #00796B;
+  --padding-start: 0;
+  --padding-end: 0;
+}
